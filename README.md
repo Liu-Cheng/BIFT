@@ -1,2 +1,2 @@
 # BIFT
-Latex version of book built-in fault-tolerance (BIFT).
+Latex version of book about built-in fault-tolerance (BIFT).
