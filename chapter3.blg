@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: chapter3.aux
+The style file: plain.bst
+Database file #1: refs.bib
+Warning--empty booktitle in bloomfilter
+Warning--can't use both volume and number fields in bloomfilter
+Warning--empty year in aging_iedm
+Warning--empty year in dong_prdc09
+Warning--empty year in exploiting-redundancy
+You've used 82 entries,
+            2118 wiz_defined-function locations,
+            945 strings with 21988 characters,
+and the built_in function-call counts, 36371 in all, are:
+= -- 3496
+> -- 1768
+< -- 56
++ -- 705
+- -- 616
+* -- 2502
+:= -- 5536
+add.period$ -- 246
+call.type$ -- 82
+change.case$ -- 550
+chr.to.int$ -- 0
+cite$ -- 87
+duplicate$ -- 1500
+empty$ -- 2866
+format.name$ -- 616
+if$ -- 7978
+int.to.chr$ -- 0
+int.to.str$ -- 82
+missing$ -- 83
+newline$ -- 412
+num.names$ -- 164
+pop$ -- 696
+preamble$ -- 1
+purify$ -- 470
+quote$ -- 0
+skip$ -- 1206
+stack$ -- 0
+substring$ -- 2378
+swap$ -- 576
+text.length$ -- 56
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 322
+warning$ -- 5
+while$ -- 337
+width$ -- 84
+write$ -- 895
+(There were 5 warnings)

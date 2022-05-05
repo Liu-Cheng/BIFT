@@ -1,0 +1,167 @@
+\begin{thebibliography}{10}
+
+\bibitem{aitken2012yield}
+Rob Aitken.
+\newblock {Yield Learning Perspectives}.
+\newblock {\em IEEE Design \& Test of Computers}, 29(1):59--62, 2012.
+
+\bibitem{alizadeh2010debugging}
+Bijan Alizadeh and Masahiro Fujita.
+\newblock {A debugging method for repairing post-silicon bugs of high
+  performance processors in the fields}.
+\newblock In {\em 2010 International Conference on Field-Programmable
+  Technology}, pages 328--331, 2010.
+
+\bibitem{degradation_05}
+S.~Borkar.
+\newblock Designing reliable systems from unreliable components: the challenges
+  of transistor variability and degradation.
+\newblock {\em IEEE MICRO}, 25(6):10--16, 2005.
+
+\bibitem{borkar2003parameter}
+Shekhar Borkar, Tanay Karnik, Siva Narendra, Jim Tschanz, Ali Keshavarzi, and
+  Vivek De.
+\newblock {Parameter variations and impact on circuits and microarchitecture}.
+\newblock In {\em Proceedings of the 40th annual Design Automation Conference},
+  pages 338--342, 2003.
+
+\bibitem{chang2011constraint}
+Chia-Wei Chang, Hong-Zu Chou, Kai-Hui Chang, Jie-Hong~Roland Jiang,
+  Chien-Nan~Jimmy Liu, Chiu-Han Hsiao, and Sy-Yen Kuo.
+\newblock {Constraint generation for software-based post-silicon bug masking
+  with scalable resynthesis technique for constraint optimization}.
+\newblock In {\em 2011 12th International Symposium on Quality Electronic
+  Design}, pages 1--8, 2011.
+
+\bibitem{eyerman2007top}
+Stijn Eyerman, Lieven Eeckhout, Tejas Karkhanis, and James~E Smith.
+\newblock {A top-down approach to architecting CPI component performance
+  counters}.
+\newblock {\em IEEE micro}, 27(1):84--93, 2007.
+
+\bibitem{fu2011abacus}
+Binzhang Fu, Yinhe Han, Jun Ma, Huawei Li, and Xiaowei Li.
+\newblock An abacus turn model for time/space-efficient reconfigurable routing.
+\newblock In {\em Proceedings of the 38th annual international symposium on
+  Computer architecture}, pages 259--270, 2011.
+
+\bibitem{gil2003study}
+Daniel Gil, Joaquin Gracia, Juan~Carlos Baraza, and Pedro~J Gil.
+\newblock Study, comparison and application of different vhdl-based fault
+  injection techniques for the experimental validation of a fault-tolerant
+  system.
+\newblock {\em Microelectronics Journal}, 34(1):41--51, 2003.
+
+\bibitem{gizopoulos2011architectures}
+Dimitris Gizopoulos, Mihalis Psarakis, Sarita~V Adve, Pradeep Ramachandran,
+  Siva Kumar~Sastry Hari, Daniel Sorin, Albert Meixner, Arijit Biswas, and
+  Xavier Vera.
+\newblock {Architectures for online error detection and recovery in multicore
+  processors}.
+\newblock In {\em 2011 Design, Automation \& Test in Europe}, pages 1--6, 2011.
+
+\bibitem{gracia2008analysis}
+Joaquin Gracia, Luis~J Saiz, Juan~Carlos Baraza, Daniel Gil, and Pedro~J Gil.
+\newblock Analysis of the influence of intermittent faults in a
+  microcontroller.
+\newblock In {\em 2008 11th IEEE Workshop on Design and Diagnostics of
+  Electronic Circuits and Systems}, pages 1--6, 2008.
+
+\bibitem{han2013revivepath}
+Yin-He Han, Cheng Liu, Hang Lu, Wen-Bo Li, Lei Zhang, and Xiao-Wei Li.
+\newblock {RevivePath: Resilient network-on-chip design through data path
+  salvaging of router}.
+\newblock {\em Journal of Computer Science and Technology}, 28(6):1045--1053,
+  2013.
+
+\bibitem{kohler2010fault}
+Ad{\'a}n Kohler, Gert Schley, and Martin Radetzki.
+\newblock {Fault tolerant network on chip switching with graceful performance
+  degradation}.
+\newblock {\em IEEE Transactions on Computer-Aided Design of Integrated
+  Circuits and Systems}, 29(6):883--896, 2010.
+
+\bibitem{liu2021hyca}
+Cheng Liu, Cheng Chu, Dawen Xu, Ying Wang, Qianlong Wang, Huawei Li, Xiaowei
+  Li, and Kwang-Ting Cheng.
+\newblock Hyca: A hybrid computing architecture for fault tolerant deep
+  learning.
+\newblock {\em IEEE Transactions on Computer-Aided Design of Integrated
+  Circuits and Systems}, pages 1--1, 2021.
+
+\bibitem{salvaging}
+Michael~D. Powell, Arijit Biswas, Shantanu Gupta, and Shubhendu~S. Mukherjee.
+\newblock Architectural core salvaging in a multi-core processor for hard-error
+  tolerance.
+\newblock In {\em Proceedings of the 36th Annual International Symposium on
+  Computer Architecture}, pages 93--104, 2009.
+
+\bibitem{smolens2007detecting}
+Jared~C Smolens, Brian~T Gold, James~C Hoe, Babak Falsafi, and Ken Mai.
+\newblock Detecting emerging wearout faults.
+\newblock In {\em Proceedings of the IEEE Workshop on Silicon Errors in Logic -
+  System Effects}, pages 1--6, 2007.
+
+\bibitem{srinivasan2005exploiting}
+Jayanth Srinivasan, Sarita~V Adve, Pradip Bose, and Jude~A Rivers.
+\newblock Exploiting structural duplication for lifetime reliability
+  enhancement.
+\newblock In {\em 32nd International Symposium on Computer Architecture
+  (ISCA'05)}, pages 520--531, 2005.
+
+\bibitem{tschanz201045nm}
+James Tschanz, Keith Bowman, Shih-Lien Lu, Paolo Aseron, Muhammad Khellah,
+  Arijit Raychowdhury, Bibiche Geuskens, Carlos Tokunaga, Chris Wilkerson,
+  Tanay Karnik, et~al.
+\newblock {A 45nm resilient and adaptive microprocessor core for dynamic
+  variation tolerance}.
+\newblock In {\em 2010 IEEE International Solid-State Circuits
+  Conference-(ISSCC)}, pages 282--283, 2010.
+
+\bibitem{wang2006vlsi}
+Laung-Terng Wang, Cheng-Wen Wu, and Xiaoqing Wen.
+\newblock {\em VLSI Test Principles and Architectures: Design for Testability
+  (Systems on Silicon)}.
+\newblock 2006.
+
+\bibitem{wang2006restore}
+Nicholas~J Wang and Sanjay~J Patel.
+\newblock {ReStore: Symptom-based soft error detection in microprocessors}.
+\newblock {\em IEEE Transactions on Dependable and Secure Computing},
+  3(3):188--201, 2006.
+
+\bibitem{wang2007impact}
+Wenping Wang, Shengqi Yang, Sarvesh Bhardwaj, Rakesh Vattikonda, Sarma
+  Vrudhula, Frank Liu, and Yu~Cao.
+\newblock {The impact of NBTI on the performance of combinational and
+  sequential circuits}.
+\newblock In {\em Proceedings of the 44th annual Design Automation Conference},
+  pages 364--369, 2007.
+
+\bibitem{ReviveNet}
+Guihai Yan, Yinhe Han, and Xaiowei Li.
+\newblock Revivenet: A self-adaptive architecture for improving lifetime
+  reliability via localized timing adaptation.
+\newblock {\em IEEE Transctions on Computers}, 60(9):1219--1232, 2011.
+
+\bibitem{yan2010svfd}
+Guihai Yan, Yinhe Han, and Xiaowei Li.
+\newblock {SVFD: A versatile online fault detection scheme via checking of
+  stability violation}.
+\newblock {\em IEEE transactions on very large scale integration (VLSI)
+  systems}, 19(9):1627--1640, 2010.
+
+\bibitem{yan2015corerank}
+Guihai Yan, Faqiang Sun, Huawei Li, and Xiaowei Li.
+\newblock {CoreRank: redeeming yan2015corerank``Sick Silicon'' by dynamically
+  quantifying core-level healthy condition}.
+\newblock {\em IEEE Transactions on Computers}, 65(3):716--729, 2015.
+
+\bibitem{zhang2009topology}
+Lei Zhang, Yinhe Han, Qiang Xu, Xiao wei Li, and Huawei Li.
+\newblock On topology reconfiguration for defect-tolerant noc-based homogeneous
+  manycore systems.
+\newblock {\em IEEE Transactions on Very Large Scale Integration (VLSI)
+  Systems}, 17(9):1173--1186, 2009.
+
+\end{thebibliography}

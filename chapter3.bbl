@@ -1,0 +1,541 @@
+\begin{thebibliography}{10}
+
+\bibitem{Recycle_07}
+{A. Tiwari, S. R. Sarangi, and J. Torrellas}.
+\newblock {ReCycle: Pipeline Adaptation to Tolerate Process Variation}.
+\newblock In {\em Proceedings of the 34th Annual International Symposium on
+  Computer Architecture}, pages 323--334, 2007.
+
+\bibitem{annavaram2007implications}
+Murali Annavaram, Ed~Grochowski, and Paul Reed.
+\newblock Implications of device timing variability on full chip timing.
+\newblock In {\em 2007 IEEE 13th International Symposium on High Performance
+  Computer Architecture}, pages 37--45, 2007.
+
+\bibitem{biswas2005computing}
+Arijit Biswas, Paul Racunas, Razvan Cheveresan, Joel Emer, Shubhendu~S
+  Mukherjee, and Ram Rangan.
+\newblock Computing architectural vulnerability factors for address-based
+  structures.
+\newblock In {\em 32nd International Symposium on Computer Architecture
+  (ISCA'05)}, pages 532--543, 2005.
+
+\bibitem{bloomfilter}
+Burton~H. Bloom.
+\newblock Space/time trade-offs in hash coding with allowable errors.
+\newblock volume~13, pages 422--426, 1970.
+
+\bibitem{degradation_05}
+S.~Borkar.
+\newblock Designing reliable systems from unreliable components: the challenges
+  of transistor variability and degradation.
+\newblock {\em IEEE MICRO}, 25(6):10--16, 2005.
+
+\bibitem{thousandcore}
+Shekhar Borkar.
+\newblock Thousand core chips: a technology perspective.
+\newblock In {\em Proceedings of the 44th Annual Design Automation Conference},
+  pages 746--749. ACM, 2007.
+
+\bibitem{bower2006applying}
+Fred~A Bower, Derek Hower, Mahmut Yilmaz, Daniel~J Sorin, and Sule Ozev.
+\newblock Applying architectural vulnerability analysis to hard faults in the
+  microprocessor.
+\newblock In {\em Proceedings of the joint international conference on
+  Measurement and modeling of computer systems}, pages 375--376, 2006.
+
+\bibitem{diagnosis}
+FRED~A. BOWER, DANIEL~J. SORIN, and SULE OZEV.
+\newblock Online diagnosis of hard faults in microprocessors.
+\newblock {\em ACM Trans. Archit. Code Optim.}, 4(2):Article 8, 32 pages, 2007.
+
+\bibitem{variation_jssc02}
+K.A. Bowman, S.G. Duvall, and J.D. Meindl.
+\newblock Impact of die-to-die and within-die parameter fluctuations on the
+  maximum clock frequency distribution for gigascale integration.
+\newblock {\em IEEE Journal of Solid-State Circuits}, 37(2):183--190, 2002.
+
+\bibitem{arm-timing-error}
+David Bull, Shidhartha Das, Karthik Shivshankar, Ganesh Dasika, Krisztian
+  Flautner, and David Blaauw.
+\newblock A power-efficient 32b arm isa processor using timing-error detection
+  and correction for transient-error tolerance and adaptation to pvt variation.
+\newblock In {\em 2010 IEEE International Solid-State Circuits Conference -
+  (ISSCC)}, pages 284--285, 2010.
+
+\bibitem{sniper}
+T.E. Carlson, W.~Heirman, and L.~Eeckhout.
+\newblock Sniper: Exploring the level of abstraction for scalable and accurate
+  parallel multi-core simulation.
+\newblock In {\em International Conference for High Performance Computing,
+  Networking, Storage and Analysis (SC),}, pages 1--12, 2011.
+
+\bibitem{aging_iedm}
+Liu Changze, Zou Jibin, Wang Runsheng, Huang Ru, Xu~Xiaoqing, Liu Jinhua,
+  Wu~Hanming, and Wang Yangyuan.
+\newblock Towards the systematic study of aging induced dynamic variability in
+  nano-mosfets: Adding the missing cycle-to-cycle variation effects into
+  device-to-device variation.
+\newblock In {\em IEEE International Electron Devices Meeting (IEDM)}, pages
+  25.4.1--25.4.4.
+
+\bibitem{perfcomp}
+Tianshi Chen, Yunji Chen, Qi~Guo, O.~Temam, Yue Wu, and Weiwu Hu.
+\newblock Statistical performance comparisons of computers.
+\newblock In {\em IEEE 18th International Symposium on High Performance
+  Computer Architecture (HPCA),}, pages 1--12, 2012.
+
+\bibitem{PackCap}
+Ryan Cochran, Can Hankendi, Ayse~K. Coskun, and Sherief Reda.
+\newblock Pack amp; cap: Adaptive dvfs and thread packing under power caps.
+\newblock In {\em 2011 44th Annual IEEE/ACM International Symposium on
+  Microarchitecture (MICRO)}, pages 175--185, 2011.
+
+\bibitem{constantinescu2002impact}
+Cristian Constantinescu.
+\newblock Impact of deep submicron technology on dependability of vlsi
+  circuits.
+\newblock In {\em Proceedings International Conference on Dependable Systems
+  and Networks}, pages 205--209, 2002.
+
+\bibitem{constantinescu2003trends}
+Cristian Constantinescu.
+\newblock Trends and challenges in vlsi circuit reliability.
+\newblock {\em IEEE micro}, 23(4):14--19, 2003.
+
+\bibitem{constantinescu2008intermittent}
+Cristian Constantinescu.
+\newblock Intermittent faults and effects on reliability of integrated
+  circuits.
+\newblock In {\em 2008 Annual Reliability and Maintainability Symposium}, pages
+  370--374, 2008.
+
+\bibitem{PIE}
+Kenzo~Van Craeynest, Aamer Jaleel, Lieven Eeckhout, Paolo Narvaez, and Joel
+  Emer.
+\newblock Scheduling heterogeneous multi-cores through performance impact
+  estimation (pie).
+\newblock In {\em Proceedings of the 39th Annual International Symposium on
+  Computer Architecture}, pages 213--224, 2012.
+
+\bibitem{desikan2001sim}
+Rajagopalan Desikan, Doug Burger, Stepen~W Keckler, and Todd Austin.
+\newblock Sim-alpha: a validated execution driven alpha 21264 simulator.
+\newblock Technical report, Technical Report TR-01-23, Department of Computer
+  Sciences, University of Texas at Austin, 2001.
+
+\bibitem{dong_prdc09}
+Jianbo Dong, Lei Zhang, Yinhe Han, Guihai Yan, and Xiaowei Li.
+\newblock Variation-aware scheduling for chip multiprocessors with thread level
+  redundancy.
+\newblock In {\em IEEE Pacific Rim Dependable Computing Conference}, pages
+  17--22.
+
+\bibitem{duan2009versatile}
+Lide Duan, Bin Li, and Lu~Peng.
+\newblock Versatile prediction and fast estimation of architectural
+  vulnerability factor from processor performance metrics.
+\newblock In {\em 2009 IEEE 15th International Symposium on High Performance
+  Computer Architecture}, pages 129--140, 2009.
+
+\bibitem{Dan_Micro03}
+D.~Ernst, Nam~Sung Kim, S.~Das, S.~Pant, R.~Rao, Toan Pham, C.~Ziesler,
+  D.~Blaauw, T.~Austin, K.~Flautner, and T.~Mudge.
+\newblock Razor: a low-power pipeline based on circuit-level timing
+  speculation.
+\newblock In {\em Proceedings. 36th Annual IEEE/ACM International Symposium on
+  Microarchitecture, 2003. MICRO-36.}, pages 7--18, 2003.
+
+\bibitem{fahs2001performance}
+Brian Fahs, Satarupa Bose, Matthew Crum, Brian Slechta, Francesco Spadini, Tony
+  Tung, Sanjay~J Patel, and Steven~S Lumetta.
+\newblock Performance characterization of a hardware mechanism for dynamic
+  optimization.
+\newblock In {\em Proceedings. 34th ACM/IEEE International Symposium on
+  Microarchitecture. MICRO-34}, pages 16--27, 2001.
+
+\bibitem{fu2006sim}
+Xin Fu, Tao Li, and Jos{\'e} Fortes.
+\newblock Sim-soda: A unified framework for architectural level software
+  reliability analysis.
+\newblock In {\em Workshop on modeling, benchmarking and simulation}, volume
+  2006, 2006.
+
+\bibitem{IntervalSimulation}
+Davy Genbrugge, Stijn Eyerman, and Lieven Eeckhout.
+\newblock Interval simulation: Raising the level of abstraction in
+  architectural simulation.
+\newblock In {\em IEEE International Symposium on High-Performance Computer
+  Architecture (HPCA)}, pages 307--318, 2010.
+
+\bibitem{modulo}
+Marc Girault.
+\newblock Hash-functions using modulo-n operations.
+\newblock In {\em Proceedings of the 6th Annual International Conference on
+  Theory and Application of Cryptographic Techniques}, pages 217--226, 1987.
+
+\bibitem{gracia2008analysis}
+Joaquin Gracia, Luis~J Saiz, Juan~Carlos Baraza, Daniel Gil, and Pedro~J Gil.
+\newblock Analysis of the influence of intermittent faults in a
+  microcontroller.
+\newblock In {\em 2008 11th IEEE Workshop on Design and Diagnostics of
+  Electronic Circuits and Systems}, pages 1--6, 2008.
+
+\bibitem{biglittle}
+Peter Greenhalgh.
+\newblock {\em big.LITTLE Processing with ARM Cortex-A15 \& Cortex-A7 (White
+  paper)}.
+\newblock ARM, September 2011.
+
+\bibitem{gupta1991impact}
+Anoop Gupta, Andrew Tucker, and Shigeru Urushibara.
+\newblock The impact of operating system scheduling policies and
+  synchronization methods of performance of parallel applications.
+\newblock In {\em Proceedings of the 1991 ACM SIGMETRICS conference on
+  Measurement and modeling of computer systems}, pages 120--132, 1991.
+
+\bibitem{ThermalDVFS}
+Heather Hanson, Stephen~W. Keckler, Soraya Ghiasi, Karthick Rajamani, Freeman
+  Rawson, and Juan Rubio.
+\newblock Thermal response to dvfs: analysis with an intel pentium m.
+\newblock In {\em Proceedings of the 2007 international symposium on Low power
+  electronics and design (ISLPED '07)}, pages 219--224, 2007.
+
+\bibitem{mswat}
+Siva Kumar~Sastry Hari, Man-Lap Li, Pradeep Ramachandran, Byn Choi, and
+  Sarita~V. Adve.
+\newblock mswat: Low-cost hardware fault detection and diagnosis for multicore
+  systems.
+\newblock In {\em 2009 42nd Annual IEEE/ACM International Symposium on
+  Microarchitecture (MICRO)}, pages 122--132, 2009.
+
+\bibitem{variationdvfs}
+Sebastian Herbert and Diana Marculescu.
+\newblock Variation-aware dynamic voltage/frequency scaling.
+\newblock In {\em 2009 IEEE 15th International Symposium on High Performance
+  Computer Architecture}, pages 301--312, 2009.
+
+\bibitem{itrs13}
+ITRS.
+\newblock Process integration, devices, and structures summary, 2013.
+
+\bibitem{WearoutRecovery_08}
+{J. Shin, V. Zyuban, P. Bose, and T.M. Pinkston}.
+\newblock {A Proactive Wearout Recovery Approach for Exploiting
+  Microarchitectural Redundancy to Extend Cache SRAM Lifetime}.
+\newblock In {\em 2008 International Symposium on Computer Architecture}, pages
+  353--362, 2008.
+
+\bibitem{joseph2003control}
+Russ Joseph, David Brooks, and Margaret Martonosi.
+\newblock Control techniques to eliminate voltage emergencies in high
+  performance processors.
+\newblock In {\em The Ninth International Symposium on High-Performance
+  Computer Architecture, 2003. HPCA-9 2003. Proceedings.}, pages 79--90, 2003.
+
+\bibitem{karnik2004characterization}
+Tanay Karnik and Peter Hazucha.
+\newblock Characterization of soft errors caused by single event upsets in cmos
+  processes.
+\newblock {\em IEEE Transactions on Dependable and secure Computing},
+  1(2):128--143, 2004.
+
+\bibitem{kessler1999alpha}
+Richard~E Kessler.
+\newblock The alpha 21264 microprocessor.
+\newblock {\em IEEE micro}, 19(2):24--36, 1999.
+
+\bibitem{kumar2006reducing}
+Sumeet Kumar and Aneesh Aggarwal.
+\newblock Reducing resource redundancy for concurrent error detection
+  techniques in high performance microprocessors.
+\newblock In {\em The Twelfth International Symposium on High-Performance
+  Computer Architecture, 2006.}, pages 212--221, 2006.
+
+\bibitem{trace-based-diagnosis}
+Man-Lap Li, Pradeep Ramachandran, Swarup~K. Sahoo, Sarita~V. Adve, Vikram~S.
+  Adve, and Yuanyuan Zhou.
+\newblock Trace-based microarchitecture-level diagnosis of permanent hardware
+  faults.
+\newblock In {\em 2008 IEEE International Conference on Dependable Systems and
+  Networks With FTCS and DCC (DSN)}, pages 22--31, 2008.
+
+\bibitem{li2008understanding}
+Man-Lap Li, Pradeep Ramachandran, Swarup~Kumar Sahoo, Sarita~V Adve, Vikram~S
+  Adve, and Yuanyuan Zhou.
+\newblock Understanding the propagation of hard errors to software and
+  implications for resilient system design.
+\newblock {\em ACM Sigplan Notices}, 43(3):265--276, 2008.
+
+\bibitem{Revival_08}
+Xiaoyao Liang, Gu-Yeon Wei, and David Brooks.
+\newblock Revival: A variation-tolerant architecture using voltage
+  interpolation and variable latency.
+\newblock {\em IEEE Micro}, 29(1):127--138, 2009.
+
+\bibitem{mcpherson2006reliability}
+Joseph~W McPherson.
+\newblock Reliability challenges for 45nm and beyond.
+\newblock In {\em 2006 43rd ACM/IEEE design automation conference}, pages
+  176--181, 2006.
+
+\bibitem{Graphite}
+J.E. Miller, H.~Kasture, G.~Kurian, C.~Gruenwald, N.~Beckmann, C.~Celio,
+  J.~Eastep, and A.~Agarwal.
+\newblock Graphite: A distributed parallel simulator for multicores.
+\newblock In {\em IEEE 16th International Symposium on High Performance
+  Computer Architecture (HPCA)}, pages 1--12, 2010.
+
+\bibitem{Using_Register_Lifetime_dsn07}
+Pablo Montesinos, Wei Liu, and Josep Torrellas.
+\newblock Using register lifetime predictions to protect register files against
+  soft errors.
+\newblock In {\em 37th Annual IEEE/IFIP International Conference on Dependable
+  Systems and Networks (DSN'07)}, pages 286--296, 2007.
+
+\bibitem{mukherjee2002detailed}
+Shubhendu~S Mukherjee, Michael Kontz, and Steven~K Reinhardt.
+\newblock Detailed design and evaluation of redundant multi-threading
+  alternatives.
+\newblock In {\em Proceedings 29th annual international symposium on computer
+  architecture}, pages 99--110, 2002.
+
+\bibitem{mukherjee2003systematic}
+Shubhendu~S Mukherjee, Christopher Weaver, Joel Emer, Steven~K Reinhardt, and
+  Todd Austin.
+\newblock A systematic methodology to compute the architectural vulnerability
+  factors for a high-performance microprocessor.
+\newblock In {\em Proceedings. 36th Annual IEEE/ACM International Symposium on
+  Microarchitecture, MICRO-36.}, pages 29--40, 2003.
+
+\bibitem{pan2011cost}
+Songjun Pan, Yu~Hu, Xing Hu, and Xiaowei Li.
+\newblock A cost-effective substantial-impact-filter based method to tolerate
+  voltage emergencies.
+\newblock In {\em 2011 Design, Automation \& Test in Europe}, pages 1--6, 2011.
+
+\bibitem{pan2009online}
+Songjun Pan, Yu~Hu, and Xiaowei Li.
+\newblock Online computing and predicting architectural vulnerability factor of
+  microprocessor structures.
+\newblock In {\em 2009 15th IEEE Pacific Rim International Symposium on
+  Dependable Computing}, pages 345--350, 2009.
+
+\bibitem{parashar2006slick}
+Angshuman Parashar, Anand Sivasubramaniam, and Sudhanva Gurumurthi.
+\newblock Slick: slice-based locality exploitation for efficient redundant
+  multithreading.
+\newblock {\em ACM SIGOPS Operating Systems Review}, 40(5):95--105, 2006.
+
+\bibitem{pearsonhash}
+Peter~K. Pearson.
+\newblock Fast hashing of variable-length text strings.
+\newblock {\em Commun. ACM}, 33(6):677--680, 1990.
+
+\bibitem{pellegrini2008crashtest}
+Andrea Pellegrini, Kypros Constantinides, Dan Zhang, Shobana Sudhakar, Valeria
+  Bertacco, and Todd Austin.
+\newblock Crashtest: A fast high-fidelity fpga-based resiliency analysis
+  framework.
+\newblock In {\em 2008 IEEE International Conference on Computer Design}, pages
+  363--370, 2008.
+
+\bibitem{flicker}
+Paula Petrica, Adam~M. Izraelevitz, David~H. Albonesi, and Christine~A.
+  Shoemaker.
+\newblock Flicker: a dynamically adaptive architecture for power limited
+  multicore systems.
+\newblock In {\em Proceedings of the 40th Annual International Symposium on
+  Computer Architecture}, pages 13--23, 2013.
+
+\bibitem{salvaging}
+Michael~D. Powell, Arijit Biswas, Shantanu Gupta, and Shubhendu~S. Mukherjee.
+\newblock Architectural core salvaging in a multi-core processor for hard-error
+  tolerance.
+\newblock In {\em Proceedings of the 36th Annual International Symposium on
+  Computer Architecture}, pages 93--104, 2009.
+
+\bibitem{exploiting-redundancy}
+Shivakumar Premkishore, S.~W. Keckler, C.~R. Moore, and D.~Burger.
+\newblock Exploiting microarchitectural redundancy for defect tolerance.
+\newblock In {\em ICCD}, pages 481--488.
+
+\bibitem{TDS}
+K.~K. Rangan, M.~D. Powell, Wei Gu-Yeon, and D.~Brooks.
+\newblock Achieving uniform performance and maximizing throughput in the
+  presence of heterogeneity.
+\newblock In {\em 2011 IEEE 17th International Symposium on High Performance
+  Computer Architecture (HPCA)}, pages 3--14, 2011.
+
+\bibitem{reinhardt2000transient}
+Steven~K Reinhardt and Shubhendu~S Mukherjee.
+\newblock Transient fault detection via simultaneous multithreading.
+\newblock In {\em Proceedings of 27th International Symposium on Computer
+  Architecture (IEEE Cat. No. RS00201)}, pages 25--36, 2000.
+
+\bibitem{md5}
+{RFC document}.
+\newblock Rfc 1321: The md5 message-digest algorithm.
+\newblock In {\em Internet Engineering Task Force}, 1992.
+
+\bibitem{ParameterVariations_DAC03}
+{S. Borkar, T. Karnik, S. Narendra, J. Tschanz, A. Keshavarzi, and V. De}.
+\newblock {Parameter Variations and Impact on Circuits and Microarchitecture}.
+\newblock {\em DAC}, pages 338--342, 2003.
+
+\bibitem{shen2013modern}
+John~Paul Shen and Mikko~H Lipasti.
+\newblock {\em Modern processor design: fundamentals of superscalar
+  processors}.
+\newblock Waveland Press, 2013.
+
+\bibitem{sherwood2002automatically}
+Timothy Sherwood, Erez Perelman, Greg Hamerly, and Brad Calder.
+\newblock Automatically characterizing large scale program behavior.
+\newblock {\em ACM SIGPLAN Notices}, 37(10):45--57, 2002.
+
+\bibitem{Shivakumar_DSN02}
+P.~Shivakumar, M.~Kistler, S.W. Keckler, D.~Burger, and L.~Alvisi.
+\newblock Modeling the effect of technology trends on the soft error rate of
+  combinational logic.
+\newblock In {\em Proceedings International Conference on Dependable Systems
+  and Networks}, pages 389--398, 2002.
+
+\bibitem{shivakumar2003exploiting}
+Premkishore Shivakumar, Stephen~W Keckler, Charles~R Moore, and Doug Burger.
+\newblock Exploiting microarchitectural redundancy for defect tolerance.
+\newblock In {\em Proceedings 21st international conference on computer
+  design}, pages 481--488, 2003.
+
+\bibitem{shyam2006ultra}
+Smitha Shyam, Kypros Constantinides, Sujay Phadke, Valeria Bertacco, and Todd
+  Austin.
+\newblock Ultra low-cost defect protection for microprocessor pipelines.
+\newblock {\em ACM SIGARCH Computer Architecture News}, 34(5):73--82, 2006.
+
+\bibitem{Slegel1999IBM}
+T.J. Slegel, R.M. Averill, M.A. Check, B.C. Giamei, B.W. Krumm, C.A. Krygowski,
+  W.H. Li, J.S. Liptay, J.D. MacDougall, T.J. McPherson, J.A. Navarro, E.M.
+  Schwarz, K.~Shum, and C.F. Webb.
+\newblock Ibm's s/390 g5 microprocessor design.
+\newblock {\em IEEE Micro}, 19(2):12--23, 1999.
+
+\bibitem{smolens2007detecting}
+Jared~C Smolens, Brian~T Gold, James~C Hoe, Babak Falsafi, and Ken Mai.
+\newblock Detecting emerging wearout faults.
+\newblock In {\em Proceedings of the IEEE Workshop on Silicon Errors in Logic -
+  System Effects}, pages 1--6, 2007.
+
+\bibitem{sridharan2009eliminating}
+Vilas Sridharan and David~R Kaeli.
+\newblock Eliminating microarchitectural dependency from architectural
+  vulnerability.
+\newblock In {\em 2009 IEEE 15th International Symposium on High Performance
+  Computer Architecture}, pages 117--128, 2009.
+
+\bibitem{sridharan2010using}
+Vilas Sridharan and David~R Kaeli.
+\newblock Using hardware vulnerability factors to enhance avf analysis.
+\newblock {\em ACM SIGARCH Computer Architecture News}, 38(3):461--472, 2010.
+
+\bibitem{ImpactTechnologyScaling_04}
+Jayanth Srinivasan, Sarita~V. Adve, Pradip Bose, and Jude~A. Rivers.
+\newblock The impact of technology scaling on lifetime reliability.
+\newblock In {\em International Conference on Dependable Systems and Networks,
+  2004}, pages 177--186, 2004.
+
+\bibitem{Itanium_isscc08}
+Blaine Stackhouse, Sal Bhimji, Chris Bostak, Dave Bradley, Brian Cherkauer,
+  Jayen Desai, Erin Francom, Mike Gowan, Paul Gronowski, Dan Krueger, Charles
+  Morganti, and Steve Troyer.
+\newblock A 65 nm 2-billion transistor quad-core itanium processor.
+\newblock {\em IEEE Journal of Solid-State Circuits}, 44(1):18--31, 2009.
+
+\bibitem{stathis2001physical}
+James~H Stathis.
+\newblock Physical and predictive models of ultrathin oxide reliability in cmos
+  devices and circuits.
+\newblock {\em IEEE Transactions on device and materials reliability},
+  1(1):43--59, 2001.
+
+\bibitem{siliconodometer}
+Kim Tae-Hyoung, R.~Persaud, and C.~H. Kim.
+\newblock Silicon odometer: An on-chip reliability monitor for measuring
+  frequency degradation of digital circuits.
+\newblock {\em IEEE Journal of Solid-State Circuits}, 43(4):874--880, 2008.
+
+\bibitem{Variation_Aware_Application_Scheduling_isca08}
+Radu Teodorescu and Josep Torrellas.
+\newblock Variation-aware application scheduling and power management for chip
+  multiprocessors.
+\newblock In {\em Proceedings of the 35th Annual International Symposium on
+  Computer Architecture}, pages 363--374, 2008.
+
+\bibitem{touloupis2007study}
+Emmanuel Touloupis, James~A Flint, Vassilios~A Chouliaras, and David~D Ward.
+\newblock Study of the effects of seu-induced faults on a pipeline protected
+  microprocessor.
+\newblock {\em IEEE Transactions on Computers}, 56(12):1585--1596, 2007.
+
+\bibitem{tschanz201045nm}
+James Tschanz, Keith Bowman, Shih-Lien Lu, Paolo Aseron, Muhammad Khellah,
+  Arijit Raychowdhury, Bibiche Geuskens, Carlos Tokunaga, Chris Wilkerson,
+  Tanay Karnik, et~al.
+\newblock {A 45nm resilient and adaptive microprocessor core for dynamic
+  variation tolerance}.
+\newblock In {\em 2010 IEEE International Solid-State Circuits
+  Conference-(ISSCC)}, pages 282--283, 2010.
+
+\bibitem{walcott2007dynamic}
+Kristen~R Walcott, Greg Humphreys, and Sudhanva Gurumurthi.
+\newblock Dynamic prediction of architectural vulnerability from
+  microarchitectural state.
+\newblock In {\em Proceedings of the 34th Annual International Symposium on
+  Computer Architecture}, pages 516--527, 2007.
+
+\bibitem{wang2004characterizing}
+Nicholas~J Wang, Justin Quek, Todd~M Rafacz, et~al.
+\newblock Characterizing the effects of transient faults on a high-performance
+  processor pipeline.
+\newblock In {\em International Conference on Dependable Systems and Networks,
+  2004}, pages 61--61, 2004.
+
+\bibitem{wells2008adapting}
+Philip~M Wells, Koushik Chakraborty, and Gurindar~S Sohi.
+\newblock Adapting to intermittent faults in multicore systems.
+\newblock {\em ACM SIGOPS Operating Systems Review}, 42(2):255--264, 2008.
+
+\bibitem{wood1999data}
+Alan Wood.
+\newblock {\em Data integrity concepts, features, and technology (White
+  paper)}.
+\newblock Compaq NonStop{\textregistered}, 1999.
+
+\bibitem{ReviveNet}
+Guihai Yan, Yinhe Han, and Xaiowei Li.
+\newblock Revivenet: A self-adaptive architecture for improving lifetime
+  reliability via localized timing adaptation.
+\newblock {\em IEEE Transctions on Computers}, 60(9):1219--1232, 2011.
+
+\bibitem{yan2010svfd}
+Guihai Yan, Yinhe Han, and Xiaowei Li.
+\newblock {SVFD: A versatile online fault detection scheme via checking of
+  stability violation}.
+\newblock {\em IEEE transactions on very large scale integration (VLSI)
+  systems}, 19(9):1627--1640, 2010.
+
+\bibitem{AgileRegulator}
+Guihai Yan, Yingmin Li, Yinhe Han, Xiaowei Li, Minyi Guo, and Xiaoyao Liang.
+\newblock Agileregulator: A hybrid voltage regulator scheme redeeming dark
+  silicon for power efficiency in a multicore architecture.
+\newblock In {\em 2012 IEEE 18th International Symposium on High Performance
+  Computer Architecture (HPCA)}, pages 287--298, 2012.
+
+\bibitem{TEATM_isca10}
+Guihai Yan, Xiaoyao Liang, Yinhe Han, and Xiaowei Li.
+\newblock Leveraging the core-level complementary effects of pvt variations to
+  reduce timing emergencies in multi-core processors.
+\newblock In {\em Proceedings of the 37th Annual International Symposium on
+  Computer Architecture}, pages 485--496, 2010.
+
+\end{thebibliography}

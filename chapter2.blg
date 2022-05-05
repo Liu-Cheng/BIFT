@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: chapter2.aux
+The style file: plain.bst
+Database file #1: refs.bib
+Warning--to sort, need author or key in ITRS09
+Warning--empty journal in sematech03
+Warning--empty journal in ITRS_PIDS07
+Warning--empty journal in OpenSPARC_06
+You've used 96 entries,
+            2118 wiz_defined-function locations,
+            1054 strings with 22882 characters,
+and the built_in function-call counts, 38954 in all, are:
+= -- 3816
+> -- 1590
+< -- 58
++ -- 648
+- -- 536
+* -- 2559
+:= -- 5885
+add.period$ -- 287
+call.type$ -- 96
+change.case$ -- 550
+chr.to.int$ -- 0
+cite$ -- 100
+duplicate$ -- 1681
+empty$ -- 3253
+format.name$ -- 536
+if$ -- 8652
+int.to.chr$ -- 0
+int.to.str$ -- 96
+missing$ -- 99
+newline$ -- 482
+num.names$ -- 190
+pop$ -- 682
+preamble$ -- 1
+purify$ -- 459
+quote$ -- 0
+skip$ -- 1352
+stack$ -- 0
+substring$ -- 2772
+swap$ -- 619
+text.length$ -- 58
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 374
+warning$ -- 4
+while$ -- 372
+width$ -- 98
+write$ -- 1049
+(There were 4 warnings)

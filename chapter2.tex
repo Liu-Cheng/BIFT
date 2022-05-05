@@ -15,15 +15,17 @@ The aggressive technology scaling poses serious challenges to lifetime reliabili
 In ultra-deep submicrometer technology, soft errors and device aging are two of the paramount reliability concerns. Although many studies have been done to tackle the two challenges, most take them separately so far, thereby failing to reach better performance-cost trade-offs. To support a more efficient design trade-off, we propose a unified fault detection scheme—stability violation-based fault detection (SVFD), by which the soft errors (both single event upset and single event transient), aging delay, and delay faults can be uniformly dealt with. SVFD grounds on a new fault model, stability violation, derived from analysis of signal behavior. SVFD has been validated by conducting a set of intensive Hspice simulations targeting the next-generation 32-nm CMOS technology. An application of SVFD to a floating-point unit (FPU) is also evaluated. Experimental results show that SVFD has more versatile fault detection capability for fault detection than several schemes recently proposed at comparable overhead in terms of area, power, and performance. 
 
 \subsection{Challenges for On-line Fault Detection}
-The advancement of the semiconductor technology in the following decade will bring a broad set of reliability challenges at a dramatic fast pace \cite{sematech03}. Two of the paramount challenges are soft errors and aging-driven lifetime reliability. Many researchers focused on soft error modeling and mitigation within a wide design spectrum: device level, circuit level \cite{Mitra_C05}\cite{Han_DT05}\cite{Zhang_TVLSI06}, microarchitecture level \cite{Vijaykumar_ISCA02}, and software level \cite{Oh_TR02}. In addition, the industry and academic communities have done much work on understanding the semiconductor device reliability failure mechanisms and models, such as Electromigration \cite{Electromigration_69}, NBTI \cite{NBTI_Impact05}\cite{Modeling-and-minimization_06}\cite{NBTItoComb_07}, TDDB, Hot Carrier Injection, Temperature cycling \cite{failure_models_00} etc.
 
-Aging failure prediction \cite{failure_prediction_07} \cite{failure_prediction2_08} is a promising approach to cope with aging effects. Unlike soft errors, device aging is a gradual process, which makes the prediction of aging degree achievable. Before the devices totally breakdown and thereby loss their functionalities, they always tend to exhibit performance degradation, e.g. increased threshold voltage instability, soaring leakage power, worse heat characteristics etc. Most of these negative effects can result in the degradation of switch performance of the transistors\cite{degradation_05}, and eventually excessive path delay. In other words, most of the aging failures can be predicted by sensing the gradually increased aging delay. Agarwal et al. designed an aging sensor for this purpose \cite{failure_prediction_07}.
+The advancement of the semiconductor technology in the following decade will bring a broad set of reliability challenges at a dramatic fast pace \cite{sematech03}. Two of the paramount challenges are soft errors and aging-driven lifetime reliability. Many researchers focused on soft error modeling and mitigation within a wide design spectrum: device level, circuit level \cite{Mitra_C05}\cite{Han_DT05}\cite{Zhang_TVLSI06}, microarchitecture level \cite{Vijaykumar_ISCA02}, and software level \cite{Oh_TR02}. In addition, the industry and academic communities have done much work on understanding the semiconductor device reliability failure mechanisms and models, such as Electromigration \cite{Electromigration_69}, negative bias temperature instability (NBTI) \cite{NBTI_Impact05}\cite{Modeling-and-minimization_06}\cite{wang2007impact}, time dependent dielectric breakdown (TDDB), hot carrier injection (HCI), temperature cycling \cite{failure_models_00} etc.
+
+Aging failure prediction \cite{agarwal2007circuit} \cite{failure_prediction2_08} is a promising approach to cope with aging effects. Unlike soft errors, device aging is a gradual process, which makes the prediction of aging degree achievable. Before the devices totally breakdown and thereby loss their functionalities, they always tend to exhibit performance degradation, e.g. increased threshold voltage instability, soaring leakage power, worse heat characteristics etc. Most of these negative effects can result in the degradation of switch performance of the transistors\cite{degradation_05}, and eventually excessive path delay. In other words, most of the aging failures can be predicted by sensing the gradually increased aging delay. Agarwal et al. designed an aging sensor for this purpose \cite{agarwal2007circuit}.
 
 On the other hand, semiconductor devices are becoming increasingly prone to soft errors (SEUs and SETs) as feature size decreases \cite{Shivakumar_DSN02}. Abundant redundancy design solutions have been proposed to combat the soaring soft error rate, such as spatial redundancy by duplicating the flip-flops \cite{Mitra_C05} \cite{lowcost_date07}, or temporal redundancy by multiple-sampling \cite{Nicolaidis_VTS99}. Even if the overhead imposed by these redundancy can be kept in check, these "redundancy" resources, however, help little in mitigating aging effects, and in contrast even speed up the aging process due to the extra heat generated by those redundancy resources. This dilemma makes the goal of providing a not only aging-resistant but also soft error-tolerant scheme hard to achieve, unless a cumbersome combination of the previous aging-sensor and redundancy-based approaches is conducted.
 
 Rather than attempting to exploit such a cumbersome combination, in this paper, we propose a unified mechanism to face the two challenges. Based on signal behavior analysis, we find that the soft errors and aging delay can converge into the same signal behavior: \emph{Stability Violation} to the target circuits. Even the conventional delay faults, which could result from such as transition hazard, crosstalk, can be represented as stability violations. Hence, it is promising to propose a unified fault model and associated detection mechanism, thereby creating the chance of reaching a more optimum trade-off between detection capability, design complexity, and implementation overhead. To our knowledge, this is the first work to handle the soft errors, aging delay, and delay faults under a unified fault detection mechanism.
 
 \subsection{Stability Violation Based Fault Detection}
+
 The stability violation of a signal is defined as at least one transition happens in the time interval during which the signal should be kept stable. Setup time violation, which the progressive aging delay tends to contribute to, is a typical example of stability violation. Apparently, only coping with setup time violation is far from sufficient to handle soft errors and delay faults. In the rest of this Section, we will present how to comprehensively describe the rationale behind stability violation, and meanwhile how to generalize it to propose a unified fault model.
 
 First, we specify the target fault types, and then move to the unified stability violation model and associated SVFD mechanism.
@@ -31,9 +33,9 @@ First, we specify the target fault types, and then move to the unified stability
 \subsubsection{Target Fault Types}
 {\bf Soft Error:} \emph{Single Event Upset} (SEU) and \emph{Single Event Transient} (SET) \cite{Nicolaidis_TDMR05}. If some high energy radioactive particles induce a storage cell to be flipped, this unintentional bit-flip is called SEU. If the particles cause a node of combinational logic to collect enough charge, a transient current pulse could be generated. This pulse can transform into a voltage pulse and propagate along logic paths  \cite{Shivakumar_DSN02}. This type of soft error is called SET. A soft error might not be captured by flip-flops due to three masking effects \cite{Shivakumar_DSN02}: Logic Masking, Electrical Masking, and Latching-window Masking.
 
-{\bf Aging Delay:} The aging effects, such as NBTI, can cause aging delay which can be used for aging-failure prediction\cite{failure_prediction_07}. Usually, the aging delay increasing is a gradual process over time, though the abrupt delay increasing is possible when the devices suffer from breakdown induced by mechanical stresses. This type of "abrupt" aging delay will not be covered in this paper.
+{\bf Aging Delay:} The aging effects, such as NBTI, can cause aging delay which can be used for aging-failure prediction\cite{agarwal2007circuit}. Usually, the aging delay increasing is a gradual process over time, though the abrupt delay increasing is possible when the devices suffer from breakdown induced by mechanical stresses. This type of "abrupt" aging delay will not be covered in this paper.
 
-{\bf Delay Fault:} This type of faults refers to the conventional delay faults \cite{sensing_96} which is caused by device defect, signal crosstalk, etc. This
+{\bf Delay Fault:} This type of faults refers to the conventional delay faults \cite{favalli1996sensing} which is caused by device defect, signal crosstalk, etc. This
 paper handles the delay faults with size less than the width of the Detection Slack.
 
 \subsubsection{Modeling Faulty Signals}
@@ -62,7 +64,7 @@ First, the variable period $T_{vp}$ and stable period $T_{sp}$ for a specified s
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\textwidth]{fig2-1.eps}
+\includegraphics[width=0.4\textwidth]{fig2-1}
   \vspace{-0.5em} 
   \caption{Generic logic circuit}
   \label{comb}
@@ -86,7 +88,7 @@ Figure \ref{tvts} illustrates the time periods of both $S_i$ and $S_o$ in the $n
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.65\textwidth]{fig2-2.eps}
+\includegraphics[width=0.5\textwidth]{fig2-2}
    \vspace{-0.5em}
    \caption{Variable Period VS. Stable Period}
    \label{tvts}
@@ -102,7 +104,7 @@ With the defined time periods, we can explain how the target faults commit the a
 
 4) Suppose that an unmasked SET happens in the combinational logic. If the duration of the SET is less than $T_{DS}+T_{GB}$, the behavior of the SET fault is similar with the commonly referred delay faults: unexpected signal transitions within the $S_o$'s stable period. Therefore, the analysis result for the delay faults also holds for SET faults. That is SV, TVV, and IVV are equivalently to each other for the SET.
 
-From the above analysis we conclude that, from the signal behavior perspective, the target faults either induce equivalent SV, IVV, and TVV (for delay fault and SET), or only represent as SV (for aging delay), or SV and possible equivalent IVV and TVV (for SEU). In other words, the target faults can be uniformly modeled as SV. The implication is that we can employ a unified stability checker to handle the detection for all of the target faults. This unification can potentially support a more efficient implementation of the online fault detection scheme than the traditional redundancy-based approaches such as \cite{Mitra_C05}\cite{Han_DT05}. In addition, the capability for aging failure prediction \cite{failure_prediction_07}\cite{failure_prediction2_08} can be exploited in place with the same scheme; thereby greatly facilitating the aging-aware designs.
+From the above analysis we conclude that, from the signal behavior perspective, the target faults either induce equivalent SV, IVV, and TVV (for delay fault and SET), or only represent as SV (for aging delay), or SV and possible equivalent IVV and TVV (for SEU). In other words, the target faults can be uniformly modeled as SV. The implication is that we can employ a unified stability checker to handle the detection for all of the target faults. This unification can potentially support a more efficient implementation of the online fault detection scheme than the traditional redundancy-based approaches such as \cite{Mitra_C05}\cite{Han_DT05}. In addition, the capability for aging failure prediction \cite{agarwal2007circuit}\cite{failure_prediction2_08} can be exploited in place with the same scheme; thereby greatly facilitating the aging-aware designs.
 
 \subsection{Timing Constrains Exploration}
 The object of SVFD in essence is to distinguish those transitions violating the signals' stability specification from normal signal transitions, thereby achieving the goal of fault detection. The detection of SV can be accomplished with some kind of stability checkers.
@@ -142,7 +144,7 @@ To cover this period, one way is to set another stability checker for $S_i$, at 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.45\textwidth]{fig2-3.eps}
+\includegraphics[width=0.45\textwidth]{fig2-3}
 \vspace{-0.5em}  
 \caption{XOR Protection}\label{xor}
 \end{figure}
@@ -157,7 +159,7 @@ t>nT-t_{cd}.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.75\textwidth]{fig2-4.eps}
+\includegraphics[width=0.6\textwidth]{fig2-4}
   \caption{Variety of timing period for $S_i$}\label{zones}
 \end{figure}
 
@@ -230,7 +232,7 @@ To sum up, we can use only one stability checker, with the assistant XOR protect
 
 As the end of this section, the following exemplifies an empirical analysis of the above constrains.
 
-\vspace{0.3cm} {\bf Example.} Generally, $T_{DS}$ is determined by the maximum width of SET pulses, commonly conservatively being set to a half cycle period, that is $T_{DS}=0.5\times T$. $T_{GB}$ originally is determined by the aging detection interval---the time interval between two aging detection action (the aging sensor does not need to be always on).  $T_{GB}$ is much larger than 5\% of cycle period, as suggested by \cite{failure_prediction_07}, but should be less (or not much larger) than the reserved timing margin. Since commonly 10\% timing margin is reserved to combat PVT variations, the cycle period dose not need to be increased to reserve extra time margin for $T_{GB}$. The propagation delay $t_{pd}$ hence is $T\times(1-10\%)=0.9T$. We omit the term of $t_{cq}$ because comparing with other timing parameters, $t_{cq}$ is marginal. Then, based on (\ref{eq82}) we need to figure out the minimal $t_{cd}$ since smaller $t_{cd}$ implies that smaller compensation effort and associated area overhead to pay. We suggest use the results: $t_{cd}=0.45T$, $T_{DS} = 0.45T$, $T_{GB}=0.09T$ because this configuration is competent enough in detecting SET faults, delay faults, and aging delays with modest compensation effort.
+\vspace{0.3cm} {\bf Example.} Generally, $T_{DS}$ is determined by the maximum width of SET pulses, commonly conservatively being set to a half cycle period, that is $T_{DS}=0.5\times T$. $T_{GB}$ originally is determined by the aging detection interval---the time interval between two aging detection action (the aging sensor does not need to be always on).  $T_{GB}$ is much larger than 5\% of cycle period, as suggested by \cite{agarwal2007circuit}, but should be less (or not much larger) than the reserved timing margin. Since commonly 10\% timing margin is reserved to combat PVT variations, the cycle period dose not need to be increased to reserve extra time margin for $T_{GB}$. The propagation delay $t_{pd}$ hence is $T\times(1-10\%)=0.9T$. We omit the term of $t_{cq}$ because comparing with other timing parameters, $t_{cq}$ is marginal. Then, based on (\ref{eq82}) we need to figure out the minimal $t_{cd}$ since smaller $t_{cd}$ implies that smaller compensation effort and associated area overhead to pay. We suggest use the results: $t_{cd}=0.45T$, $T_{DS} = 0.45T$, $T_{GB}=0.09T$ because this configuration is competent enough in detecting SET faults, delay faults, and aging delays with modest compensation effort.
 
 \subsection{On-line Fault Detection Architecture}
 Figure \ref{imple}(a) shows the top view  of the whole fault detection scheme. Note that the XOR (NXOR actually) output needs to be gated outside of the XOR protection period where an XOR-flagged alarm can unintentionally discharge the detection unit if leave un-gated. The detailed timing relations and associate clock configurations is shown in Figure \ref{imple}(b), where CLKS is used to control precharge-evaluation, and CLKG is the gating clock for XOR output.
@@ -238,31 +240,29 @@ Figure \ref{imple}(a) shows the top view  of the whole fault detection scheme. N
 \begin{figure}[t]
 \centering 
 \subfigure[Top view of SVFD scheme]
-{\includegraphics[width=0.6\textwidth]{fig2-5a.eps}} 
-
+{\includegraphics[width=0.6\textwidth]{fig2-5a}} 
 \subfigure[Timing of precharge clock and XOR-protection gating clock]
-{\includegraphics[width=0.7\textwidth]{fig2-5b.eps}}  \caption{Top view of implementation}
+{\includegraphics[width=0.7\textwidth]{fig2-5b}}  \caption{Top view of implementation}
 \label{imple}
 \end{figure}
-
 \subsubsection{Circuit Design}
 Figure \ref{circuit} shows the transistor level design of SVFD scheme. A detection unit consists of two key components: a stability checker (Figure \ref{circuit}(b)) and an output compactor (Figure \ref{circuit}(c)).
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{fig2-6.eps}
+\includegraphics[width=0.95\textwidth]{fig2-6}
 \vspace{-0.5em}  
 \caption{SVFD Implementation} \label{circuit}
 \end{figure}
 
-The basic stability checker can be derived from a sensing circuit for on-line delay fault detection \cite{sensing_96}, in which the signal integrity is verified by a pair of consistent charge/discharge nodes, a delay fault will trigger one of the nodes to be discharged/chargeed and thereby causes states inconsistent between them. The same fundamental detection principle is employed to design a sensor dedicated for aging prediction, referred as Aging Resistant Stability Checker (ARSC) \cite{failure_prediction_07}. Based on the same principle, we design a new stability checker. Compared with ARSC, the checker has several new features which can improve the robustness and reduce the overhead. The following explains how does the circuit work and then presents the new features.
+The basic stability checker can be derived from a sensing circuit for on-line delay fault detection \cite{favalli1996sensing}, in which the signal integrity is verified by a pair of consistent charge/discharge nodes, a delay fault will trigger one of the nodes to be discharged/chargeed and thereby causes states inconsistent between them. The same fundamental detection principle is employed to design a sensor dedicated for aging prediction, referred as Aging Resistant Stability Checker (ARSC) \cite{agarwal2007circuit}. Based on the same principle, we design a new stability checker. Compared with ARSC, the checker has several new features which can improve the robustness and reduce the overhead. The following explains how does the circuit work and then presents the new features.
 
 During precharge period, both nodes $S1$ and $S2$ in the stability checker are charged up to HIGH. Then, the circuit starts evaluation, one of the two nodes is pulled down, while the other one floats at HIGH because the gate signal of M3 is always complemented with that of M4 (a weak keeper can help the floated node stick to HIGH). Hence, the node $S1$ and $S2$ are always exclusive during fault-free time, which will make the node $S4$ stick to HIGH because the high-impedance path between S4 and GND always exists. When a Stability Violation is committed by $S_i$ (out of the XOR protection period) or $S_o$, the violation will trigger the discharge of the node that has charged up to HIGH. Eventually both nodes are discharged, and thereby the node S4 is pull down to LOW. Then, the node X in output compactor will be discharged, which flags a fault being detected. The compacted result X needs to be latched twice: CLK-latched for indicating aging delay and CLKG-latched for indicating soft error or delay fault (Figure \ref{circuit}(d)). The reason will be explained in Section VIII.
 
 \begin{figure}[t]
-\centering \subfigure[XOR Tree] {\includegraphics[width=0.4\textwidth, height=0.25\textwidth]{fig2-7a.eps}}
+\centering \subfigure[XOR Tree] {\includegraphics[width=0.55\textwidth, height=0.33\textwidth]{fig2-7a}}
 \hspace{1cm} \subfigure[AND Tree]
-{\includegraphics[width=0.53\textwidth,height=0.25\textwidth]{fig2-7b.eps}}  \caption{Compacting the
+{\includegraphics[width=0.7\textwidth,height=0.35\textwidth]{fig2-7b}}  \caption{Compacting the
 output signals and XOR-protection signals} \label{compactor}
 \end{figure}
 
@@ -272,7 +272,7 @@ There are two new features in the detection unit:
 1) The NOR logic for combining the states of S1 and S2 is realized with a dynamic
 logic (M6, M7, and M8), which can improve the robustness of the checker and reduce
 the area overhead and switch power dissipation. Unlike the stability checker in ARSC
-\cite{failure_prediction_07}, where the checker output, a static NOR gate, is
+\cite{agarwal2007circuit}, where the checker output, a static NOR gate, is
 directly driven by a floated HIGH node during fault-free time, our checker's output
 is generated by a dynamic NAND gate. This change is based on that both the node S1
 and S2 are pulled up to HIGH during precharge, and consequently both M7 and M8 are
@@ -298,7 +298,7 @@ for node X.
 %%transistor's aging process induced by NBTI effects is greatly slow down in disable
 %%mode.
 %unlink ARSC where the Guard Band is confined by a clock and its delayed counterpart
-%\cite{failure_prediction_07}, SVFD unit provides Guard Band by the  CLK and CLKS. So
+%\cite{agarwal2007circuit}, SVFD unit provides Guard Band by the  CLK and CLKS. So
 %the clock skew needs to be controlled well. This issue is beyond the scope of this
 %paper.
 
@@ -373,35 +373,38 @@ For an XOR-Tree with the same levels, the minimum delay $D_{xor\_min}$ is about 
 A major drawback to adopting such AND-Trees and XOR-Trees is the degraded detection resolution---when a checker flag an alarm, we can not precisely identity the fault spot in the target circuit because  the AND-Trees and XOR-Trees can exponentially expend the "region-under-control" of a specified fault detection unit. However, this issue is trivial since we only focus on efficient fault detection---which serves as the primary step for most backward error recovery schemes. 
 
 \subsubsection{Clock Variation Consideration}
-The delayed clocks can be generated from locally delaying the system clock CLK, as prior work \cite{failure_prediction_07} did, or obtained from a DLL. To ease the implementation worry, the following cites some industry data to show that generating the clocks with well-defined intentional skew should not be a substantial problem. DLLs have been widely used to reduce the clock skew across clock domains \cite{clock_01}\cite{DLL_00}\cite{DLL2_04}. The detailed design of a DLL is beyond the scope of this paper. Many industry practices have shown that implementing clocks with only 10-picosecond skew is practical. For example, even in conventional tree-based clock networks across $500mm^2$ processor die with frequency up to 2.5GHz , the unintended clock skew can be efficiently limited to less than 10ps \cite{Itanium_clock05}. While previous study \cite{failure_prediction_07} shows that a reasonable $T_{GB}$ is usually around 100ps for a 1GHz system. Therefore, generating the CLK, CLKS, and CLKG with well-defined intentional skew should not be a substantial problem. The sophisticated variation-resilient clocking scheme is beyond the scope of this paper.
+The delayed clocks can be generated from locally delaying the system clock CLK, as prior work \cite{agarwal2007circuit} did, or obtained from a DLL. To ease the implementation worry, the following cites some industry data to show that generating the clocks with well-defined intentional skew should not be a substantial problem. DLLs have been widely used to reduce the clock skew across clock domains \cite{clock_01}\cite{DLL_00}\cite{DLL2_04}. The detailed design of a DLL is beyond the scope of this paper. Many industry practices have shown that implementing clocks with only 10-picosecond skew is practical. For example, even in conventional tree-based clock networks across $500mm^2$ processor die with frequency up to 2.5GHz , the unintended clock skew can be efficiently limited to less than 10ps \cite{Itanium_clock05}. While previous study \cite{agarwal2007circuit} shows that a reasonable $T_{GB}$ is usually around 100ps for a 1GHz system. Therefore, generating the CLK, CLKS, and CLKG with well-defined intentional skew should not be a substantial problem. The sophisticated variation-resilient clocking scheme is beyond the scope of this paper.
 
 Another practice, Razor II \cite{Razor2_ISSCC08}, can also back up the feasibility of clocks used in SVFD.  Razor II also relies on strict clocks. An auxiliary clock, called DC, is employed. The deployment of CLKG in our SVFD scheme is not harder than that of DC in Razor II scheme. Hence, we believe that implementing the supportive clocks is practical.
 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.99\textwidth, height=0.6\textwidth]{fig2-8.eps}
+\includegraphics[width=0.99\textwidth, height=0.6\textwidth]{fig2-8}
 \caption{Hspice simulated signal state transitions}\label{spice}
 \end{figure}
 
 
 \subsection{Experiment Result Analysis}
-The experiments consist of two parts. The first is dedicated for evaluating a basic fault detection unit in terms of detailed timing verification, area overhead, power, and performance. The results are obtained by using the Hspice targeting the next-generation 32nm Predictive Technology Model \cite{PTM_06} for High-performance applications.  The second shows an application to a fully pipelined floating-point unit (FPU), with emphasis on analysis of chip-level area and power overhead and comparisons with other solutions.
+The experiments consist of two parts. The first is dedicated for evaluating a basic fault detection unit in terms of detailed timing verification, area overhead, power, and performance. The results are obtained by using the Hspice targeting the next-generation 32nm Predictive Technology Model \cite{PTM_06} for High-performance applications.  The second shows an application to a fully pipelined FPU, with emphasis on analysis of chip-level area and power overhead and comparisons with other solutions.
 
 \begin{table}[t]
 \begin{center}
-\caption{Comparing Tradeoffs with other schemes}\label{comparison1}
-\begin{tabular}{l||ccccc}
- {\bf Overhead}     &  SEFF\cite{Mitra_C05}  &  LOWCOST\cite{lowcost_date07} &  ARSC\cite{failure_prediction_07}  &  CWSPFF\cite{CWSP_DATE08}    &  SVFD \\
-\hline
+  \setlength{\tabcolsep}{2mm}
+\caption{Comparing Tradeoffs with other schemes}
+\label{comparison1}
+\begin{tabular}{@{}lccccc}
+\toprule
+ {\bf Overhead}     &  SEFF\cite{Mitra_C05}  &  LOWCOST\cite{lowcost_date07} &  ARSC\cite{agarwal2007circuit}  &  CWSPFF\cite{CWSP_DATE08}    &  SVFD \\
+ \midrule  
 Transistor          & 14     & 36       & 24     & 46       &  36   \\
 Power               & 1.00      & $>$1.00        & $>$0.10$^\triangleleft$   &  N/A     &  1.16  \\
 performance         & 0      & N/A      & $<$1\% & $<$1\%   &  $<$1\%\\
 Clock               & 1      &  2       &  2     & 2        &  3    \\
 \hline
-\hline
   {\bf Applicability}     & Limited$^\diamond$ & Limited &  General & General & General \\
-\hline \multicolumn{6}{l}{N/A:  Not applicable.}\\
+\bottomrule 
+ \multicolumn{6}{l}{N/A:  Not applicable.}\\
 \multicolumn{6}{l}{$\diamond$  The scheme needs support from a specific scannable flip-flop.}\\
 \multicolumn{6}{l}{$\triangleleft$  ARSC uses a different metric of power overhead.} \\
 
@@ -419,11 +422,11 @@ From the bottom figure, we can see that all the SV shown in the second and third
 
 We zoom in the figure to extract some useful timing information (the zoomed figures are omitted due to space limitation): 1)the critical precharge time $\tau_0$ is about 40ps, while the available precharge time is about 400ps---one order of magnitude larger than $\tau_0$. Hence, the precharge time will not be a limitation when we manipulate the related timings. 2)The detection delay is just about 40ps which is merely 2 Fo4 delay in 32nm technology. 3)The maximum undetectable glitch width is about 18ps, which is even less than most soft error induce glitch width in 32nm technology, so the robustness of SET detection should not be in question.
 
-Table \ref{comparison1} shows the tradeoff comparisons between SEFF \cite{Mitra_C05}, LOWCOST \cite{lowcost_date07}, ARSC \cite{failure_prediction_07}, CSWPFF \cite{CWSP_DATE08}, and SVFD. we use the number of transistors as the area overhead metric, as many circuit-level studies adopted.
+Table \ref{comparison1} shows the tradeoff comparisons between SEFF \cite{Mitra_C05}, LOWCOST \cite{lowcost_date07}, ARSC \cite{agarwal2007circuit}, CSWPFF \cite{CWSP_DATE08}, and SVFD. we use the number of transistors as the area overhead metric, as many circuit-level studies adopted.
 
 To conduct comparisons between variety schemes, a baseline latch and flip-flop design needs to be determined. Figure \ref{circuit}(e) and (f) show the adopted baseline design. The similar latch design is used by Intel as a standard datapath latch \cite{Latch_01}. The flip-flops is used in PowerPC603 processor \cite{Flipflop_94}. In addition, an XOR gate consumes at least 12 transistors when computing the number of transistors (eight transistors for the core XOR logic and another four for generating the inverter versions of input signals). For fairness, only the checker and its input generating logics are considered; the subcomponents that can be shared among checkers (i.e. output compactor, and output latches) are not taken into account though such amortization will make the area overhead of SVFD more attractive.
 
-{\bf Area:} As Table \ref{comparison1} indicates, SEFF is most economic scheme in term of area overhead; however, this benefit has to be based on a dedicated scannable flip-flop design in which each functional flip-flop has a replica, called shadow flip-flop,  to support scan test. This heavy reliance on the specific scannable flip-flop, though greatly facilitate an area-efficient design, limits the applicability of SEFF, since not all designs use the same design-for-test techniques and implementation. LOWCOST can be regarded as a mutation of SEFF, but with a delay between the functional flip-flops and its' shadow counterpart. Thus, LOWCOST face the same issue of limited applicability. Clearly, if the shadow flip-flops are treated as overhead transistors, then the total transistors overhead must be much higher than that shown in table \ref{comparison1}.
+{\bf Area:} As Table \ref{comparison1} indicates, SEFF is most economic scheme in term of area overhead; however, this benefit has to be based on a dedicated scannable flip-flop design in which each functional flip-flop has a replica, called shadow flip-flop,  to support scan test. This heavy reliance on the specific scannable flip-flop, though greatly facilitate an area-efficient design, limits the applicability of SEFF, since not all designs use the same design-for-test techniques and implementation. LOWCOST can be regarded as a mutation of SEFF, but with a delay between the functional flip-flops and its' shadow counterpart. Thus, LOWCOST face the same issue of limited applicability. Clearly, if the shadow flip-flops are treated as overhead transistors, then the total transistors overhead must be much higher than that shown in Table \ref{comparison1}.
 
 {\bf Power:} We use a relative power penalty $R_p$ to evaluate the power:
 
@@ -435,7 +438,7 @@ We compare the power of the detection unit against that of a standard flip-flop,
 
 As for other solutions,  SEFF's power is doubled ($R_p=1$), as \cite{Mitra_C05} shows, since a redundancy flip-flop is enabled. Similar modification is conducted in LOWCOST, and moreover an extra lath is employed; hence the power of LOWCOST must be slightly larger than that of SEFF ($R_p>1$).
 
-Note that our checker seems much more power-hungry than ARSC. That is because the power overhead metric in \cite{failure_prediction_07} is different with ours. In ARSC, the power overhead is calculated as the whole logic (include both the flip-flop and combinational logic) power increase. Because the combinational logic's power is relatively constant, so the actual sensor power consumption compared with a flip-flop should be much higher.
+Note that our checker seems much more power-hungry than ARSC. That is because the power overhead metric in \cite{agarwal2007circuit} is different with ours. In ARSC, the power overhead is calculated as the whole logic (include both the flip-flop and combinational logic) power increase. Because the combinational logic's power is relatively constant, so the actual sensor power consumption compared with a flip-flop should be much higher.
 
 {\bf Performance:} The performance mainly depends on the flip-flops time overhead and the critical path delay. In SVFD, there is no modification to the flip-flops and the critical path is not changed as well. The only timing penalty results from several extra gate capacitances drived by the $S_i$ and $S_o$. Our experiment result shows this penalty is less than 1\% for a special combinational logic: 8-inverter chain.  In fact, the other SEFF, LOWCOST, ARSC, and CWSPFF face the same situation, but no one get hurt from it.
 
@@ -459,25 +462,25 @@ First, several timing parameters are determined. Specifically,
 
   \item The clock-to-q time $t_{cq}$ depends heavily on a specific flip-flop design and technology. Given 180nm technology for the design in Figure \ref{circuit}(f),  $t_{cq}$ is about 110 ps; Thus, we get $t_{cq} = 0.06T$.
 
-  \item  Next, $t_{cd}$, $T_DS$, and $T_{GB}$ needs to be determined. We prefer minimize $t_{cd}$ since larger $t_{cd}$ implies more path compensation area needed to pay, while check whether $T_{DS}$ and $T_{GB}$ meets the common requirement, for example, $T_{DS}\approx0.5T$ and $T_{GB}>0.05T$ \cite{lowcost_date07} \cite{failure_prediction_07}. From (\ref{eq82}), we figure out the minimal $t_{cd}$ is 0.79ns ($0.43T$), at which $T_{GB}=0.095T$, $T_{DS}=0.48T$. Then, we check out that $T_{GB}$ indeed meets the requirement: larger than $0.05T$ while less than timing margin ($0.1T$). $T_{DS}$, however, is slightly smaller than $0.5T$; considering such minor mismatch won't impose any substantial problem for delay fault and SET detection, we prefer to keep $T_{DS}=0.48$ while paying the minimal path compensation overhead.
+  \item  Next, $t_{cd}$, $T_DS$, and $T_{GB}$ needs to be determined. We prefer minimize $t_{cd}$ since larger $t_{cd}$ implies more path compensation area needed to pay, while check whether $T_{DS}$ and $T_{GB}$ meets the common requirement, for example, $T_{DS}\approx0.5T$ and $T_{GB}>0.05T$ \cite{lowcost_date07} \cite{agarwal2007circuit}. From (\ref{eq82}), we figure out the minimal $t_{cd}$ is 0.79ns ($0.43T$), at which $T_{GB}=0.095T$, $T_{DS}=0.48T$. Then, we check out that $T_{GB}$ indeed meets the requirement: larger than $0.05T$ while less than timing margin ($0.1T$). $T_{DS}$, however, is slightly smaller than $0.5T$; considering such minor mismatch won't impose any substantial problem for delay fault and SET detection, we prefer to keep $T_{DS}=0.48$ while paying the minimal path compensation overhead.
 \end{itemize}
 
-Second, at RTL-level, we integrated parts of the SVFD infrastructure---the XOR-Protection, XOR-Trees, AND-Trees---into the target FPU. It is difficult to integrate corresponding stability checkers and compactors because these logic are highly custom dynamic logic at transistor-level; however, since we focus on overhead evaluation, so this difficulty can also be resolved in an "indirect" way. The area overhead imposed by these dynamic logic is estimated based on the data in Table \ref{comparison1}. The short-path compensation is realized by imposing a timing constraints when conducting RTL synthesis. After the compensation process, we conduct the post-simulation to verify pipelines functionality and timing.
+Second, at register transfer level (RTL), we integrated parts of the SVFD infrastructure---the XOR-Protection, XOR-Trees, AND-Trees---into the target FPU. It is difficult to integrate corresponding stability checkers and compactors because these logic are highly custom dynamic logic at transistor-level; however, since we focus on overhead evaluation, so this difficulty can also be resolved in an "indirect" way. The area overhead imposed by these dynamic logic is estimated based on the data in Table \ref{comparison1}. The short-path compensation is realized by imposing a timing constraints when conducting RTL synthesis. After the compensation process, we conduct the post-simulation to verify pipelines functionality and timing.
 
 Third, we use PrimePower (a gate-level power simulation and analysis tool provided by Synopsys for power evaluation. The modified FPU are exercised with random input operands for 100,000 cycle, at the same time, dump the according VCD (Value Change Dump) format data for power evaluation. The power of checkers and compactors are still evaluated with Hspice. We wrote a C++ program to convert the output of the XOR-Trees and AND-Trees (VCD format) into PWL voltage sources which are recognizable for Hspice version checker and compactor to conduct a transistor-level power evaluation. Then, the Hspice-reported power is scaled to fit PrimePower-reported power based on $R_p$, thereby obtaining the overall power consumption.
 
 \begin{figure}
 \centering 
-\subfigure[Area overhead and associated overhead breakdown] {\includegraphics[width=0.7\textwidth]{fig2-9a.eps}} 
-\subfigure[Power overhead and associated overhead breakdown] {\includegraphics[width=0.7\textwidth]{fig2-9b.eps}}
+\subfigure[Area overhead and associated overhead breakdown] {\includegraphics[width=0.6\textwidth]{fig2-9a}} 
+\subfigure[Power overhead and associated overhead breakdown] {\includegraphics[width=0.6\textwidth]{fig2-9b}}
 \caption{Area and power with configuration: $L_{xor}=3$, $L_{and}=3$, $BW=8$.} \label{area_power}
 \end{figure}
 
 \begin{figure}
 \centering \subfigure[Implication of $L_{xor}$ and $L_{and}$ on area overhead]
-{\includegraphics[width=0.45\textwidth, height=0.35\textwidth]{fig2-10a.eps}}  \subfigure[Implication of
+{\includegraphics[width=0.48\textwidth]{fig2-10a}}  \subfigure[Implication of
 $L_{xor}$ and $L_{and}$ on power overhead]
-{\includegraphics[width=0.45\textwidth, height=0.35\textwidth]{fig2-10b.eps}} \caption{Implication of
+{\includegraphics[width=0.48\textwidth]{fig2-10b}} \caption{Implication of
 $L_{xor}$ and $L_{and}$ on area and power, $BW=8$.} \label{lxor_land}
 \end{figure}
 
@@ -495,20 +498,20 @@ One way to reduce the number of checkers is to adopt the XOR-Trees with higher l
 
 The first perception gained from this figure is the power issue is much more crucial than the area issue: the worst-case power penalty can reach up to 1.62$\times$ while the area is only 1.45$\times$. In addition, the headroom for area optimization is limited comparing with that of power optimization. Hence, prioritizing the power optimization should be much effective for reaching an optimum design tradeoff. In SVFD scheme, power optimization actually does not conflict with area optimization.
 
-Second, both the area and power trends are more sensitive to $L_{xor}$ than to $L_{and}$. In particular, as Figure \ref{lxor_land}(b) shows, the impact of $L_{and}$ to the power is almost negligible. Note that although increasing $L_{xor}$ and $L_{and}$ seems facilitate more area- and power-efficient deployment, we should keep the delay implication of the XOR-Tree and AND-Tree in mind (Section V.C). For the pipelined FPU implemented with 180nm technology, the $T$ is about 17 Fo4 ($\approx 1.9ns/110ps$). We suggest configuring the XOR-Tree with fours levels, and the AND-Tree with five levels. With this configuration, the following will compare SVFD with several recently proposed solutions from cell area and power aspects.
+Second, both the area and power trends are more sensitive to $L_{xor}$ than to $L_{and}$. In particular, as Figure \ref{lxor_land}(b) shows, the impact of $L_{and}$ to the power is almost negligible. Note that although increasing $L_{xor}$ and $L_{and}$ seems facilitate more area- and power-efficient deployment, we should keep the delay implication of the XOR-Tree and AND-Tree in mind. For the pipelined FPU implemented with 180nm technology, the $T$ is about 17 Fo4 ($\approx 1.9ns/110ps$). We suggest configuring the XOR-Tree with fours levels, and the AND-Tree with five levels. With this configuration, the following will compare SVFD with several recently proposed solutions from cell area and power aspects.
 
 \begin{figure*}[!t]
 \centering \subfigure[] {
-\includegraphics[width=0.4\textwidth, height=0.3\textwidth]{fig2-11a.eps}}\subfigure[] {
-\includegraphics[width=0.4\textwidth, height=0.3\textwidth]{fig2-11b.eps}}
+\includegraphics[width=0.47\textwidth]{fig2-11a}}\subfigure[] {
+\includegraphics[width=0.47\textwidth]{fig2-11b}}
 \caption{Comparison with other solutions in terms of cell area and power,
 $L_{xor}=4$, $L_{and}=5$, $BW=8$.} \label{APcomparison}
 \end{figure*}
 
 \subsubsection{Comparison with other schemes}
-Figure \ref{APcomparison} gives the comparison results. SCAN denotes the scannable version of the original pipeline. In SCAN, all pipeline flip-flops are substituted by a scannable flip-flops in \cite{Mitra_C05}. DMR represents the traditional dual-module-redundancy (we simply double the original area and power to show DMR's overhead implication. In fact, for any meaningful DMR, other synchronous overhead such as output comparison should be also imposed). SEFF is implemented by substituting the scannable flip-flops for a self-checking flip-flops \cite{Mitra_C05}. LOWCOST is substitute the scannable flip-flops with another modified flip-flops in which the clock of shadow flip-flop is skewed from that of the functional flip-flops; in addition, an output latch is also inserted \cite{lowcost_date07}. CWSPFF is also based on a slightly modified DFF and additional Equivalence checker, another shared logic whose overhead can be amortized by the other logics \cite{CWSP_DATE08}, but even we neglect the amortizable logics, we believe that this solution is also not overhead-economic, given the results indicated in Table \ref{comparison1}. ARSC is dedicated for only aging delay detection \cite{failure_prediction_07}.
+Figure \ref{APcomparison} gives the comparison results. SCAN denotes the scannable version of the original pipeline. In SCAN, all pipeline flip-flops are substituted by a scannable flip-flops in \cite{Mitra_C05}. DMR represents the traditional dual-module-redundancy (we simply double the original area and power to show DMR's overhead implication. In fact, for any meaningful DMR, other synchronous overhead such as output comparison should be also imposed). SEFF is implemented by substituting the scannable flip-flops for a self-checking flip-flops \cite{Mitra_C05}. LOWCOST is substitute the scannable flip-flops with another modified flip-flops in which the clock of shadow flip-flop is skewed from that of the functional flip-flops; in addition, an output latch is also inserted \cite{lowcost_date07}. CWSPFF is also based on a slightly modified DFF and additional Equivalence checker, another shared logic whose overhead can be amortized by the other logics \cite{CWSP_DATE08}, but even we neglect the amortizable logics, we believe that this solution is also not overhead-economic, given the results indicated in Table \ref{comparison1}. ARSC is dedicated for only aging delay detection \cite{agarwal2007circuit}.
 
-Figure \ref{APcomparison} (a) shows different total cell area required to deploy these solutions. In which, ARSC presets to be the most area-economic, this mainly because the ARSC logic only need to be deployed in the timing critical portions in terms of aging delay detection. The same reason, combined with the fact that the ARSC logic does not need to be always-on, makes the chip-level power overhead of ARSC negligible \cite{failure_prediction_07}, as "ARSC" bar in Figure \ref{APcomparison} (b) shows.
+Figure \ref{APcomparison} (a) shows different total cell area required to deploy these solutions. In which, ARSC presets to be the most area-economic, this mainly because the ARSC logic only need to be deployed in the timing critical portions in terms of aging delay detection. The same reason, combined with the fact that the ARSC logic does not need to be always-on, makes the chip-level power overhead of ARSC negligible \cite{agarwal2007circuit}, as "ARSC" bar in Figure \ref{APcomparison} (b) shows.
 
 We bar SCAN in Figure \ref{APcomparison} is not because it can facilitate some fault detection or recovery (actually it incapable for any fault detection), but it can be viewed as the foundation of SEFF and LOWCOST.
 
@@ -522,19 +525,21 @@ Note that we omit the CWSPFF's power implication in Figure \ref{APcomparison} is
 
 \begin{table}[t]
 \begin{center}
+  \setlength{\tabcolsep}{2mm}
 \caption{Comparison of detection capability }\label{comparison}
 %\begin{tabular}{l|p{0.8cm}p{1.5cm}p{1cm}p{1.2cm}p{0.6cm}}
 %\extrarowheight=1pt \tabcolsep=2pt
-\begin{tabular}{l||ccccc}
-    &  SEFF\cite{Mitra_C05}  &  LOWCOST\cite{lowcost_date07} &  ARSC\cite{failure_prediction_07}  &  CWSPFF\cite{CWSP_DATE08}    &  SVFD \\
-\hline
+\begin{tabular}{@{}lccccc}
+  \toprule
+    &  SEFF\cite{Mitra_C05}  &  LOWCOST\cite{lowcost_date07} &  ARSC\cite{agarwal2007circuit}  &  CWSPFF\cite{CWSP_DATE08}    &  SVFD \\
+\midrule
 %\multicolumn{6}{c}{}\\
 
             SEU        &  Yes   & Yes    & No     & No     & Yes  \\
             SET        &  No    & Yes    & No     & No     & Yes  \\
             Aging delay&  No    & No     & Yes    & No     & Yes  \\
             Delay fault&  No    & Yes    &  No    & Yes    & Yes  \\
-\hline %\multicolumn{6}{l}{'---' :  Aging delay does not need any recovery routine.}\\
+\bottomrule %\multicolumn{6}{l}{'---' :  Aging delay does not need any recovery routine.}\\
  %\multicolumn{6}{l}{'90\%':  fault coverage for SEU is $(1-0.095T/T)\approx 90\%$.}\\
 \end{tabular}
 \end{center}
@@ -548,7 +553,7 @@ Modern processor includes two types of structures: logic-dominated structures su
 
 As for protecting the regular memory-dominated structures from in particular soft errors, ECC has been proven to be a highly cost-effective approach. SVFD can not beat ECC in terms power and area overhead, though SVFD can also detected soft errors in memory-dominated structures since soft errors induced perturbations can also results in stability violation in primary outputs. The prior research shows that, with extensive architectural hits such as register lifetime prediction \cite{Using_Register_Lifetime_dsn07}, selective placement \cite{Exploiting_selective_placement_taco08}, ECC-based approach commonly dictates about 30\% area overhead. This overhead is comparable with that of SVFD. While one ECC's benefit that SVFD does not possess is error correction---the commonly used ECC is able to correct single-bit fault and detect two-bit fault. Hence, we think ECC is still the preferred option for memory-dominated structures in a microprocessor.
 
-But SVFD scheme offers aging prediction that ECC-based doesn't. The aging process of SRAM cells exhibits by increased read-out and write-into delay. The read delay is more critical than write delay because the read path usually serves as the critical path \cite{Mitigating_Parameter_Variation_micro07}. While for the SVFD sensors the degraded read operations behave the same with the degrade critical delay in logics, and hence can also be handled by a simplified SVFD sensors that are only for aging prediction---as Agarwal et al. proposed previously \cite{failure_prediction_07}.
+But SVFD scheme offers aging prediction that ECC-based doesn't. The aging process of SRAM cells exhibits by increased read-out and write-into delay. The read delay is more critical than write delay because the read path usually serves as the critical path \cite{Mitigating_Parameter_Variation_micro07}. While for the SVFD sensors the degraded read operations behave the same with the degrade critical delay in logics, and hence can also be handled by a simplified SVFD sensors that are only for aging prediction---as Agarwal et al. proposed previously \cite{agarwal2007circuit}.
 
 Hence, we conclude that SVFD is a cost-efficient application for protection logic-dominated structures; combined with ECC based approaches which can already handle soft errors, SVFD can also provided additional capability for aging prediction for memory-dominated structures.
 
@@ -584,7 +589,7 @@ In this paper, we present a novel on-chip path delay measurement architecture fo
 \subsubsection{Challenges for Path Delay Measurement}
 Traditionally, at-speed delay testing is implemented to check the satisfiability of circuit timing by only considering whether the circuit under test (CUT) passes delay testing under the applied test vector pairs or not. However, under the process and environment variations, it requires to test the chip at different worst case timing scenarios to ensure the circuit’s timing correctness \cite{krstic2001delay} \cite{zhang2008multiple} \cite{fu2008robust}. For example, for a circuit path with a very small slack, even though it passes a test under the at-speed test clock frequency, it possibly fails another test that induces larger capacitive coupling or power supply noise.
 
-The small delay defect (SDD), which introduces only a small extra delay over its normal value, may fail to be detected by at-speed delay testing due to the observability limitation for a large timing slack. However, the detection for SDDs is increasingly important to ensure the chip’s quality and reliability \cite{menon2009output} \cite{ahmed2006novel}. The first important reason is that a timing failure can be occurred in the circuit during functional application caused by the increment of small delay on paths with small timing slacks \cite{kruseman2004hazard}. The second important reason is that the SDDs hidden in the circuit may become one of the major reliability limiters \cite{nigh2000test} \cite{tayade2008small}. In addition to the imperative requirement for SDD detection, it is well known that in order to improve the yield and reduce the time-to-market of chips, design-related failures and performance limiters need to be identified and rectified as early as possible during first silicon debug \cite{balachandran2002facilitating}. However, it is very expensive to use external high-speed automatic test equipment (ATE) for post-silicon debug of modern high-performance chips. Moreover, the frequency of test clock generated by external ATE would be affected by factors such as parasitic capacitance, resistance of probe and tester skew, etc. \cite{sunter1998bist}. In addition, for a complex system-on-chip (SOC), the internal circuit modules are limited to be accessed by the external ATE to conduct silicon debug.
+The small delay defect (SDD), which introduces only a small extra delay over its normal value, may fail to be detected by at-speed delay testing due to the observability limitation for a large timing slack. However, the detection for SDDs is increasingly important to ensure the chip’s quality and reliability \cite{menon2009output} \cite{ahmed2006novel}. The first important reason is that a timing failure can be occurred in the circuit during functional application caused by the increment of small delay on paths with small timing slacks \cite{kruseman2004hazard}. The second important reason is that the SDDs hidden in the circuit may become one of the major reliability limiters \cite{nigh2000test} \cite{tayade2008small}. In addition to the imperative requirement for SDD detection, it is well known that in order to improve the yield and reduce the time-to-market of chips, design-related failures and performance limiters need to be identified and rectified as early as possible during first silicon debug \cite{balachandran2002facilitating}. However, it is very expensive to use external high-speed automatic test equipment (ATE) for post-silicon debug of modern high-performance chips. Moreover, the frequency of test clock generated by external ATE would be affected by factors such as parasitic capacitance, resistance of probe and tester skew, etc. \cite{sunter1998bist}. In addition, for a complex SoC, the internal circuit modules are limited to be accessed by the external ATE to conduct silicon debug.
 
 The on-chip path delay measurement techniques have been gained many attentions for researchers in recent years, for it can provide a cost-effective alternative way to perform delay defect detection and silicon debug in modern VLSI chips. Rather than testing the chip with all possible worst-case test vectors and process corners, it is better to measure the delays of paths and to check if the slacks are large enough to tolerate all the possible delay variations. Therefore, high complexity for finding the worst case test vectors considering different sources of variations can be avoided and high test confidence can be obtained. Moreover, by on-chip measuring the delays of selected paths in the actual silicon, precise path timing information can then be obtained for circuit under actual operating conditions. As a result, whether there are SDDs on a path can be analyzed based on the measured path delay. Further, the amount of timing violations in the failing paths can be obtained under certain environment conditions \cite{datta2004delay} \cite{ datta2006scheme}. Valuable information, which points the performance limiter and source to circuit failure, can hence be obtained by the on-chip path delay measurement technique with a much higher confidence.
 
@@ -599,7 +604,7 @@ The basic structure of the proposed OCDM circuit is shown in Figure \ref{fig:OCD
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{OCDM-fig1}
+\includegraphics[width=0.95\textwidth]{OCDM-fig1}
    \caption{Proposed On-Chip Delay Measurement Circuit}
     \label{fig:OCDM-fig1}
 \end{figure}
@@ -618,7 +623,7 @@ From the last stage to the first stage of the OCDM circuit, the delay range of e
 Let us explain the function of each delay stage by considering the operation of the first delay stage for the sake of clarity for illustration without loss of generality. Suppose the input and output signals of the upper delay chain in the first delay stage are $y1$ and $y2$, respectively, accordingly, $x1$ and $x2$ are assumed for the lower delay chain. All flip-flops of the OCDM circuit are initialized to logic ZERO values by asserting the reset signal. The delay measurementmode is activated by asserting the mode signal. As $x1$ and $y1$ signals propagate through their respective delay units, the time difference between the two signals will be reduced. As shown in Figure \ref{fig:OCDM-fig2}(a), assuming that $x1$ signal lags the $y1$ signal by enough time (i.e., $y1$ switches much earlier), and hence a logic-high value will be hold in the flip-flop. As a result, $y2$ will be the signal that passes through the UDU and the buffer BUF\_B in the upper delay chain from $y1$, while $x2$ will be the signal that passes through the LDU and the buffer BUF\_B in the lower delay chain from $x1$. The delay of BUF\_B is large enough to ensure that a stable logic high value can be stored in the flip-flop before the two transition signals arrive at the inputs of the multiplexers whose outputs are connected to the inputs of the next delay stage. Clearly, the time difference between $x2$ and $y2$ is reduced by an amount which equals the delay range of this delay stage.
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{OCDM-fig2}
+\includegraphics[width=0.45\textwidth]{OCDM-fig2}
     \caption{Relation between time difference of two input signals($x1$, $y1$) and that of two output signals ($x2$, $y2$) in the first delay stage. (a) Logic ONE in the flip-flop. (b) Logic ZERO in the flip-flop.}
     \label{fig:OCDM-fig2}
 \end{figure}
@@ -636,7 +641,7 @@ The delay range of each delay stage in the OCDM circuit would be varied due to t
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{OCDM-fig3}
+\includegraphics[width=0.45\textwidth]{OCDM-fig3}
    \caption{Calibration Circuit}
     \label{fig:OCDM-fig3}
 \end{figure}
@@ -648,7 +653,7 @@ The simplified timing waveform for the delay range calibration is shown in Figur
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{OCDM-fig4}
+\includegraphics[width=0.45\textwidth]{OCDM-fig4}
    \caption{Simplified timing waveform for calibration circuit.}
     \label{fig:OCDM-fig4}
 \end{figure}
@@ -761,7 +766,7 @@ The architecture of the proposed path delay measurement scheme using the OCDM ci
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{OCDM-fig5}
+\includegraphics[width=0.56\textwidth]{OCDM-fig5}
    \caption{Path delay measurement architecture.}
     \label{fig:OCDM-fig5}
 \end{figure}
@@ -770,18 +775,18 @@ The architecture of the proposed path delay measurement scheme using the OCDM ci
 \subsubsection{Signal Transition Conversion (STC)}
 As mentioned in the previous section, the OCDM circuit works well only when the input and output of the PUM are rising transitions. However, there are other three additional cases possibly to activate the worst case delay of a circuit path, such as a path in which the input is a rising transition and the output is a falling transition. It is thus better to transfer the output signal into the signal with rising transition for facilitating path delay measurement regardless of the transition direction of the original signal.
 
-The STC block shown in Figure \ref{fig:OCDM-fig5} is used to handle this problem. Therefore, rising transitions which are derived from the start and end points of PUM can be fed into the inputs and of the OCDM circuit, respectively. Figure \ref{fig:OCDM-fig6} shows the basic structure of the STC block, which is previously designed for signal stability violation detection in \cite{favalli1996sensing} \cite{agarwal2007circuit} \cite{yan2009unified}. The simplified timing waveform for the STC block is shown in Figure \ref{fig:OCDM-fig7}(a) and (b), respectively. When the pre-charge signal is low, denoted as the pre-charge period, both the nodes and are charged up to logic high values. Hence the OUT signal keeps a logic low value.
+The STC block shown in Figure \ref{fig:OCDM-fig5} is used to handle this problem. Therefore, rising transitions which are derived from the start and end points of PUM can be fed into the inputs and of the OCDM circuit, respectively. Figure \ref{fig:OCDM-fig6} shows the basic structure of the STC block, which is previously designed for signal stability violation detection in \cite{favalli1996sensing} \cite{agarwal2007circuit} \cite{SVFD_09}. The simplified timing waveform for the STC block is shown in Figure \ref{fig:OCDM-fig7}(a) and (b), respectively. When the pre-charge signal is low, denoted as the pre-charge period, both the nodes and are charged up to logic high values. Hence the OUT signal keeps a logic low value.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{OCDM-fig6}
+\includegraphics[width=0.46\textwidth]{OCDM-fig6}
     \caption{Signal Transition Conversion (STC).}
     \label{fig:OCDM-fig6}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.6\textwidth]{OCDM-fig7}
+\includegraphics[width=0.48\textwidth]{OCDM-fig7}
     \caption{Simplified timing waveform for signal transition converter. (a) A rising transition at IN. (b) A failing transition at IN.}
     \label{fig:OCDM-fig7}
 \end{figure}
@@ -794,7 +799,7 @@ The proposed on-chip delay measurement flow can be divided into eight steps as f
 \begin{enumerate}[{1)}]
     \item Select the paths for delay measurement;
     \item For each PUM, the input and output transition signals of the PUM can be fed into the OCDM circuit for delay measurement by using the two M-to-1 multiplexes;
-    \item The first vector of the test vector pair for the PUMis applied to initialize the internal logic of the circuit to a stable state; 
+    \item The first vector of the test vector pair for the PUM is applied to initialize the internal logic of the circuit to a stable state; 
     \item All flip-flops of the OCDM circuit are initialized to logic ZERO values by asserting the reset signal; 
     \item The delay measurement mode is activated by asserting the mode signal; 
     \item The second vector of the test vector pair is applied to the circuit, and hence a transition signal can be launched at the input of the PUM, and propagated to the output of the PUM; consequently, the delay difference of the two transition signals is measured by the OCDM and recorded into the delay line; 
@@ -822,7 +827,7 @@ In order to obtain the delay of the PUM with high precision, the delay of import
 Figure \ref{fig:OCDM-fig8} redraws the architecture of the path delay measurement scheme shown in the Figure \ref{fig:OCDM-fig5}, which includes a 2-to-1 multiplexer with data inputs, respectively, connected to the data-input and data-output of the flip-flop at the end point of the PUM to calibrate the delay difference of import lines. 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.8\textwidth]{OCDM-fig8}
+\includegraphics[width=0.6\textwidth]{OCDM-fig8}
     \caption{Delay calibration for improt lines}
     \label{fig:OCDM-fig8}
 \end{figure}
@@ -847,12 +852,17 @@ In this experiment, six delay stages were designed in the OCDM circuit, making t
 The experimental result of the nominal delay range for each delay stage is reported in Table \ref{tab:delay-range}, which is obtained using HSPICE simulation. The delay range of each delay stage is approximately increased by a factor of two from the last to the first delay stage within a small margin of error. This ignorable error of delay range may be caused by the unbalanced load of each delay stage and the precision of HSPICE simulator. However, due to the fact that the delay measurement range of the OCDM circuit can be expanded exponentially by increasing the number of delay stages, thus we only need a small quantity of delay stages to achieve the required delay measurement range. Therefore, this error induced in the path delay measurement can be acceptable.
 
 \begin{table}[h]
+\begin{center}
+  \setlength{\tabcolsep}{3mm}
     \caption{Delay Range of Each Delay Stage} \label{tab:delay-range}
-    \begin{tabular}{c|cccccc}
-        \hline
-         Delay Stage & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
-         Delay Range (ps) & 409.7 & 205.1 & 102.84 & 51.59 & 25.91 & 13.23 \\ \hline
+    \begin{tabular}{@{}lcccccc}
+        \toprule
+         Delay Stage & 1 & 2 & 3 & 4 & 5 & 6 \\ 
+         \midrule
+         Delay Range (ps) & 409.7 & 205.1 & 102.84 & 51.59 & 25.91 & 13.23 \\ 
+         \bottomrule
     \end{tabular}
+\end{center}
 \end{table}
 
 \subsubsection{Experiment II}
@@ -863,7 +873,7 @@ The delay difference of the import lines can be obtained by the proposed on-chip
 
 Figure \ref{fig:OCDM-fig9} and Figure \ref{fig:OCDM-fig10} show the delay measurement results for the two paths obtained using HSPICE simulation, respectively. As shown in Figure \ref{fig:OCDM-fig9}(a), the delay of Path1 is 149.24 ps from HSPICE simulation. Figure \ref{fig:OCDM-fig9}(b) shows the simulated delay difference of the import lines, which are used to feed the start and end transitions of Path1 into the OCDM circuit. Every delay stage holds the initial logic ZERO value except for stage 2, stage 4, and stage 6 when the delay measurement is completed. Thus, the measured delay difference of the import lines is the sum of delay ranges in stage 2, stage 4, and stage 6, which can be calculated from Table \ref{tab:delay-range}, i.e., 270 ps in this case. Figure \ref{fig:OCDM-fig9}(c) shows the delay measurement result of Path1 for not considering the delay difference of import lines. Likewise, this delay measurement result can be obtained by summing the delay ranges of stage 1 and stage 6. Hence, the actual delay of Path1 can be obtained by subtracting the delay difference of import lines as obtained in Figure \ref{fig:OCDM-fig9}(b) from the path delay measurement result as obtained in Figure \ref{fig:OCDM-fig9}(c). As a result, the actual path delay of Path1 obtained by the proposed on-chip path delay measurement technique is 153 ps.
 
-It can be observed from Figure \ref{fig:OCDM-fig10}(a) that the simulation delay of Path2 is 454.11 ps using HSPICE simulation. Under the import line’s delay difference calibration mode, the delay difference of the import lines which feed the start and end transition of Path2 into the OCDM circuit can be measured. The delay stage 3, stage 4, and stage 6 hold final stable logic ONE values after the import line’s delay difference calibration as shown in Figure \ref{fig:OCDM-fig10}(b). Hence the delay difference for the import lines is 167 ps. Likewise, the delay measurement result of Path 2, in which the delay difference of import lines is not taken into account, can be obtained by summing the delay ranges of stage 1, stage 2, and stage 6 as shown in Fig. 10(c). Hence, the actual path delay measurement result for Path2 can be obtained and is 460 ps. Through the aforementioned results, we have shown that the proposed on-chip path delay measurement scheme works well. It is worthy of note that the errors between the delay measurements and simulation values for the two paths are only 3.76 and 5.89 ps, respectively, and can be ignored.
+It can be observed from Figure \ref{fig:OCDM-fig10}(a) that the simulation delay of Path2 is 454.11 ps using HSPICE simulation. Under the import line’s delay difference calibration mode, the delay difference of the import lines which feed the start and end transition of Path2 into the OCDM circuit can be measured. The delay stage 3, stage 4, and stage 6 hold final stable logic ONE values after the import line’s delay difference calibration as shown in Figure \ref{fig:OCDM-fig10}(b). Hence the delay difference for the import lines is 167 ps. Likewise, the delay measurement result of Path 2, in which the delay difference of import lines is not taken into account, can be obtained by summing the delay ranges of stage 1, stage 2, and stage 6 as shown in Figure \ref{fig:OCDM-fig10}(c). Hence, the actual path delay measurement result for Path2 can be obtained and is 460 ps. Through the aforementioned results, we have shown that the proposed on-chip path delay measurement scheme works well. It is worthy of note that the errors between the delay measurements and simulation values for the two paths are only 3.76 and 5.89 ps, respectively, and can be ignored.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\textwidth]{OCDM-fig9}
@@ -885,7 +895,7 @@ Figure \ref{fig:OCDM-fig11}(a) and Figure \ref{fig:OCDM-fig11}(b) show the wavef
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{OCDM-fig11}
+\includegraphics[width=0.6\textwidth]{OCDM-fig11}
     \caption{Simulated waveform for delay measurement obtained from 50 Monte Carlo iteration with $3\delta_{1}=0.05\mu_{L}$ and $3\delta_{2}=0.05\mu_{L}$ (a) for Path1 (b) for Path2.}
     \label{fig:OCDM-fig11}
 \end{figure}
@@ -894,12 +904,12 @@ Figure \ref{fig:OCDM-fig11}(a) and Figure \ref{fig:OCDM-fig11}(b) show the wavef
 The panel indicated as Simulation in Figure \ref{fig:OCDM-fig11}(a) shows the simulation delay results of Path1 using HSPICE Monte Carlo method. Note that the delay of Path1 without considering process variations is 149.24 ps as shown in Figure \ref{fig:OCDM-fig9}. The delays of the import lines for feeding the start and end transitions of Path1 into the OCDM circuit would also be impacted by process variations. The panel indicated as Calibration in Figure \ref{fig:OCDM-fig11}(a) shows the delay measurement results of the delay difference between the corresponding import lines. The panel indicated as Measurement in Figure \ref{fig:OCDM-fig11}(a) shows the delay measurement results of Path1 without considering the delay difference of import lines $P_{2}$ and $P_{3}$. The panel indicated as Error in Figure \ref{fig:OCDM-fig11}(a) shows the errors between the delay measurement and simulation results for Path1 in the 50 Monte Carlo iterations, respectively. Likewise, the corresponding experimental results for Path2 are shown in Figure \ref{fig:OCDM-fig11}(b). Clearly, as shown in Figure \ref{fig:OCDM-fig11}, the error of path delay measurement conducted by the proposed scheme is very small, which demonstrates the effectiveness of the proposed path delay measurement scheme under process variations.
 
 
-Figure \ref{fig:OCDM-fig12}(a) and Figure \ref{fig:OCDM-fig12}(b) show the Monte Carlo simulation results of delay measurement for Path1 and Path2 considering $3\delta_{1}=0.1\mu_{L}$ and $3\delta_{2}=0.1\mu_{L}$. It is clearly shown from Figure \ref{fig:OCDM_fig12} that although much larger delay variations are occurred as compared to the case in Figure \ref{fig:OCDM-fig11}, the error of path delaymeasurement results conducted by the proposed scheme is still very small, all within
+Figure \ref{fig:OCDM-fig12}(a) and Figure \ref{fig:OCDM-fig12}(b) show the Monte Carlo simulation results of delay measurement for Path1 and Path2 considering $3\delta_{1}=0.1\mu_{L}$ and $3\delta_{2}=0.1\mu_{L}$. It is clearly shown from Figure \ref{fig:OCDM-fig12} that although much larger delay variations are occurred as compared to the case in Figure \ref{fig:OCDM-fig11}, the error of path delaymeasurement results conducted by the proposed scheme is still very small, all within
 the range of 50 ps.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{OCDM-fig12}
+\includegraphics[width=0.6\textwidth]{OCDM-fig12}
     \caption{Simulated waveform for delay measurement obtained from 50 Monte Carlo iteration with $3\delta_{1}=0.1\mu_{L}$ and $3\delta_{2}=0.1\mu_{L}$, (a) for Path1 (b) for Path2.}
     \label{fig:OCDM-fig12}
 \end{figure}
@@ -909,61 +919,73 @@ the range of 50 ps.
 In this experiment, the proposed path delay measurement architecture was incorporated into several IWLS 2005 full-scanbased benchmark circuits to evaluate its hardware and timing overheads. The area overheads reported in this paper are obtained by using a commercial synthesis tool targeting the SMIC \SI{0.18}{\micro\metre} CMOS technology. The benchmark circuits’ profiles and the area overhead of the proposed approach incorporated into the benchmark are presented in Table \ref{tab:area-overhead}. The circuit’s name of the benchmarks and the numbers of the flip-flops are given in column 1 and column 2, respectively. The column under “Circuit Area (\SI{}{\micro\metre^{2}})” reports the area of the benchmark circuits without implementing the proposed delay measurement architecture, while the sub-columns “Total”, “NoComb”, “Comb” represent the corresponding total, sequential, and combinational part’s area, respectively. Due to the different delaymeasurement requirements pursued by test experts, various path sets with totally different sizes and path delays may be selected for delay measurement. In this paper, we only focus on the delay measurement architecture rather than how to select the circuit paths targeting for delay measurement. Hence, we evaluate the area overheads of the proposed delay measurement architecture considering different numbers of path endpoints, even in the worst case where all the flip-flops are acted as the endpoints of paths for delay measurements. The columns “20\%M”, “60\%M”, and “100\%M” represent three cases in which 20\%, 60\%, and 100\% of the flip-flops are the endpoints of paths under measurements. For each of these flip-flops, a multiplexer is added to calibrate the delay difference of import lines. The sub-columns “Area ( \SI{}{\micro\metre^2} )” and “Area (\%)” under the three cases report the area overhead of the proposed delay measurement architecture and its percentage against that of the original benchmark circuit. 
 
 \begin{table}[]
-    \scriptsize
-    \caption{Area Overhead of The Proposed Delay Measurement Architecture} \label{tab:area-overhead}
-        \begin{tabular}{|c|c|ccc|cccccc|}
-            \hline
-            \multirow{3}{*}{Circuit} & \multirow{3}{*}{\# of FFs} & \multicolumn{3}{c|}{Circuit Area (\SI{}{\micro\metre^2})}                                                            & \multicolumn{6}{c|}{Area Overhead of the Proposed Scheme}                                                                                                                                                                         \\ \cline{3-11} 
-                                     &                            & \multicolumn{1}{c|}{\multirow{2}{*}{Total}} & \multicolumn{1}{c|}{\multirow{2}{*}{NoComb.}} & \multirow{2}{*}{Comb.} & \multicolumn{2}{c|}{20\%M}                                                       & \multicolumn{2}{c|}{60\%M}                                                       & \multicolumn{2}{c|}{100\%M}                                 \\ \cline{6-11} 
-                                                              &                            & \multicolumn{1}{c|}{}                       & \multicolumn{1}{c|}{}                         &                        & \multicolumn{1}{c|}{Area(\SI{}{\micro\metre^2})} & \multicolumn{1}{c|}{Area(\%)} & \multicolumn{1}{c|}{Area(\SI{}{\micro\metre^2})} & \multicolumn{1}{c|}{Area(\%)} & \multicolumn{1}{c|}{Area(\SI{}{\micro\metre^2})} & Area(\%) \\ \hline
-                                                              des\_perf                & 8808                       & \multicolumn{1}{c|}{1196203}                & \multicolumn{1}{c|}{585978}                   & 610225                 & \multicolumn{1}{c|}{57037}                       & \multicolumn{1}{c|}{4.77\%}   & \multicolumn{1}{c|}{150794}                      & \multicolumn{1}{c|}{12.61\%}  & \multicolumn{1}{c|}{244550}                      & 20.44\%  \\ \hline
-                                                              wb\_conmax               & 578                        & \multicolumn{1}{c|}{230776}                 & \multicolumn{1}{c|}{48243}                    & 182533                 & \multicolumn{1}{c|}{13235}                       & \multicolumn{1}{c|}{5,74\%}   & \multicolumn{1}{c|}{19388}                       & \multicolumn{1}{c|}{8.40\%}   & \multicolumn{1}{c|}{25540}                       & 11.07\%  \\ \hline
-                                                              aes\_core                & 530                        & \multicolumn{1}{c|}{202325}                 & \multicolumn{1}{c|}{38699}                    & 163626                 & \multicolumn{1}{c|}{12980}                       & \multicolumn{1}{c|}{6.42\%}   & \multicolumn{1}{c|}{18621}                       & \multicolumn{1}{c|}{9.20\%}   & \multicolumn{1}{c|}{24263}                       & 11.99\%  \\ \hline
-                                                              pci\_bridge32            & 3313                       & \multicolumn{1}{c|}{396500}                 & \multicolumn{1}{c|}{264226}                   & 132274                 & \multicolumn{1}{c|}{27792}                       & \multicolumn{1}{c|}{7.01\%}   & \multicolumn{1}{c|}{63057}                       & \multicolumn{1}{c|}{15.90\%}  & \multicolumn{1}{c|}{98322}                       & 24.80\%  \\ \hline
-                                                              ac97\_ctrl               & 2229                       & \multicolumn{1}{c|}{237119}                 & \multicolumn{1}{c|}{174892}                   & 62227                  & \multicolumn{1}{c|}{22022}                       & \multicolumn{1}{c|}{9.29\%}   & \multicolumn{1}{c|}{45749}                       & \multicolumn{1}{c|}{19.29\%}  & \multicolumn{1}{c|}{69475}                       & 29.30\%  \\ \hline
-                                                              mem\_ctrl                & 1126                       & \multicolumn{1}{c|}{158606}                 & \multicolumn{1}{c|}{92866}                    & 65740                  & \multicolumn{1}{c|}{16152}                       & \multicolumn{1}{c|}{10.18\%}  & \multicolumn{1}{c|}{28138}                       & \multicolumn{1}{c|}{17.74\%}  & \multicolumn{1}{c|}{40123}                       & 25.30\%  \\ \hline
-                                                              usb\_funct               & 1741                       & \multicolumn{1}{c|}{242305}                 & \multicolumn{1}{c|}{127228}                   & 115077                 & \multicolumn{1}{c|}{1945}                        & \multicolumn{1}{c|}{8.02\%}   & \multicolumn{1}{c|}{37957}                       & \multicolumn{1}{c|}{15.66\%}  & \multicolumn{1}{c|}{56489}                       & 23.31\%  \\ \hline
-                                                              systemcaes               & 670                        & \multicolumn{1}{c|}{139789}                 & \multicolumn{1}{c|}{55894}                    & 83895                  & \multicolumn{1}{c|}{13725}                       & \multicolumn{1}{c|}{9.82\%}   & \multicolumn{1}{c|}{20857}                       & \multicolumn{1}{c|}{14.92\%}  & \multicolumn{1}{c|}{27989}                       & 20.02\%  \\ \hline
-        \end{tabular}
-    \end{table}
+  \scriptsize
+  \caption{Area Overhead of The Proposed Delay Measurement Architecture} \label{tab:area-overhead}
+      \begin{tabular}{@{}l|c|ccccccccc}
+          \hline
+          \multirow{3}{*}{Circuit} & \multirow{3}{*}{\# of FFs} & \multicolumn{3}{c|}{Circuit Area (\SI{}{\micro\metre^2})}                                                            & \multicolumn{6}{c}{Area Overhead of the Proposed Scheme}                                                                                                                                                                         \\ \cline{3-11} 
+                                   &                            & \multicolumn{1}{c}{\multirow{2}{*}{Total}} & \multicolumn{1}{c}{\multirow{2}{*}{NoComb.}} & \multicolumn{1}{c|}{\multirow{2}{*}{Comb.}} & \multicolumn{2}{c|}{20\%M}                                                       & \multicolumn{2}{c|}{60\%M}                                                       & \multicolumn{2}{c}{100\%M}                                 \\ \cline{6-11} 
+                                                            &                            &                         &                          &  \multicolumn{1}{c|}{}                      & \multicolumn{1}{c}{Area(\SI{}{\micro\metre^2})} & \multicolumn{1}{c|}{Area(\%)} & \multicolumn{1}{c}{Area(\SI{}{\micro\metre^2})} & \multicolumn{1}{c|}{Area(\%)} & \multicolumn{1}{c}{Area(\SI{}{\micro\metre^2})} & Area(\%) \\ 
+          \hline
+                                                            des\_perf                & 8808                       & \multicolumn{1}{c}{1196203}                & \multicolumn{1}{c}{585978}                   & \multicolumn{1}{c|}{610225}                 & \multicolumn{1}{c}{57037}                       & \multicolumn{1}{c|}{4.77\%}   & \multicolumn{1}{c}{150794}                      & \multicolumn{1}{c|}{12.61\%}  & \multicolumn{1}{c}{244550}                      & 20.44\%  \\ 
+                                                            wb\_conmax               & 578                        & \multicolumn{1}{c}{230776}                 & \multicolumn{1}{c}{48243}                    & \multicolumn{1}{c|}{182533}                & \multicolumn{1}{c}{13235}                       & \multicolumn{1}{c|}{5,74\%}   & \multicolumn{1}{c}{19388}                       & \multicolumn{1}{c|}{8.40\%}   & \multicolumn{1}{c}{25540}                       & 11.07\%  \\ 
+                                                            aes\_core                & 530                        & \multicolumn{1}{c}{202325}                 & \multicolumn{1}{c}{38699}                    & \multicolumn{1}{c|}{163626}                 & \multicolumn{1}{c}{12980}                       & \multicolumn{1}{c|}{6.42\%}   & \multicolumn{1}{c}{18621}                       & \multicolumn{1}{c|}{9.20\%}   & \multicolumn{1}{c}{24263}                       & 11.99\%  \\ 
+                                                            pci\_bridge32            & 3313                       & \multicolumn{1}{c}{396500}                 & \multicolumn{1}{c}{264226}                   & \multicolumn{1}{c|}{132274}                 & \multicolumn{1}{c}{27792}                       & \multicolumn{1}{c|}{7.01\%}   & \multicolumn{1}{c}{63057}                       & \multicolumn{1}{c|}{15.90\%}  & \multicolumn{1}{c}{98322}                       & 24.80\%  \\ 
+                                                            ac97\_ctrl               & 2229                       & \multicolumn{1}{c}{237119}                 & \multicolumn{1}{c}{174892}                   & \multicolumn{1}{c|}{62227}                  & \multicolumn{1}{c}{22022}                       & \multicolumn{1}{c|}{9.29\%}   & \multicolumn{1}{c}{45749}                       & \multicolumn{1}{c|}{19.29\%}  & \multicolumn{1}{c}{69475}                       & 29.30\%  \\ 
+                                                            mem\_ctrl                & 1126                       & \multicolumn{1}{c}{158606}                 & \multicolumn{1}{c}{92866}                    & \multicolumn{1}{c|}{65740}                  & \multicolumn{1}{c}{16152}                       & \multicolumn{1}{c|}{10.18\%}  & \multicolumn{1}{c}{28138}                       & \multicolumn{1}{c|}{17.74\%}  & \multicolumn{1}{c}{40123}                       & 25.30\%  \\ 
+                                                            usb\_funct               & 1741                       & \multicolumn{1}{c}{242305}                 & \multicolumn{1}{c}{127228}                   & \multicolumn{1}{c|}{115077}                 & \multicolumn{1}{c}{1945}                        & \multicolumn{1}{c|}{8.02\%}   & \multicolumn{1}{c}{37957}                       & \multicolumn{1}{c|}{15.66\%}  & \multicolumn{1}{c}{56489}                       & 23.31\%  \\ 
+                                                            systemcaes               & 670                        & \multicolumn{1}{c}{139789}                 & \multicolumn{1}{c}{55894}                    & \multicolumn{1}{c|}{83895}                  & \multicolumn{1}{c}{13725}                       & \multicolumn{1}{c|}{9.82\%}   & \multicolumn{1}{c}{20857}                       & \multicolumn{1}{c|}{14.92\%}  & \multicolumn{1}{c}{27989}                       & 20.02\%  \\ 
+          \hline
+      \end{tabular}
+  \end{table}
 
 
 As is clearly shown in the Table \ref{tab:area-overhead}, even in the worst case, the hardware overhead of the proposed delay measurement architecture can be acceptable. In practice, this scenario may be much more optimistic. For instance, Table \ref{tab:des-perf} reports the hardware overhead of the proposed architecture for des perf benchmark circuit, where all the critical paths that can be single-path sensitized are selected for delay measurement. As shown in Table \ref{tab:des-perf}, the clock period of the des perf circuit is synthesized to 2.6 ns by using a commercial synthesis tool, which guarantees a slack of 10\% the clock period for the longest path of the circuit under static timing analysis. The number of the selected critical internal paths is 1164, which is obtained by using a commercial timing analysis tool by specifying the path slack of which is less than 20\% of the clock period. For the selected critical internal paths, the number of paths that can be detected under the single path sensitization criterion is 779, which is obtained by using a commercial test generation tool and can then be sensitized for delay measurement. Clearly, multiple critical paths may be ended at the same endpoint. The number of endpoints for these paths suitable for delay measurement is 253. Therefore, only 253 endpoints should be inserted with the multiplexers to support the proposed delay measurement architecture. The area overhead of the whole proposed delay measurement architecture is \SI{116892}{\micro\metre^2}, and its percentage against that of the original benchmark circuit is only 1.41\%.
 
 \begin{table}[]
+  \begin{center}
+    \setlength{\tabcolsep}{4mm}
     \scriptsize
     \caption{Experiment Results of DES\_Perf Circuit} \label{tab:des-perf}
-    \begin{tabular}{|c|c|}
-        \hline
-        Benchmark                       & Des\_perf \\ \hline
-        \# of FFs                       & 8808      \\ \hline
-        Clock Period(ns)                & 2.6       \\ \hline
-        \# of circuit critical paths    & 1164      \\ \hline
-        \# of single path sensitization & 779       \\ \hline
-        \# of critical endpoint         & 253       \\ \hline
-        Area Overhead(\SI{}{\micro\metre^2})              & 16892     \\ \hline
-        Area Overhead (\%)              & 1.41\%    \\ \hline
+    \begin{tabular}{@{}lc}
+        \toprule
+        Benchmark                       &  \ Des\_perf \  \\ 
+        \midrule
+        \# of FFs                       & 8808      \\ 
+        Clock Period(ns)                & 2.6       \\ 
+        \# of circuit critical paths    & 1164      \\ 
+        \# of single path sensitization & 779       \\ 
+        \# of critical endpoint         & 253       \\ 
+        Area Overhead(\SI{}{\micro\metre^2})              & 16892     \\ 
+        Area Overhead (\%)              & 1.41\%    \\ 
+        \bottomrule
     \end{tabular}
+  \end{center}
 \end{table}
 
 
 Due to the application of the proposed delay measurement architecture, the delay of circuit paths may be impacted. Hence, the timing overhead of the delay measurement architecture to the critical path, which impacts the circuit performance, should be evaluated. Table \ref{tab:timing-overhead} evaluates the timing impact of the proposed delay measurement architecture to the delay of the longest circuit internal path in each benchmark circuit. The experimental circuit’s names and clock domains are listed in the column 1 and column 2, respectively. The columns under “Longest internal path delay (before)”and “Longest internal path delay (after)” represent the delays of the longest internal path before and after the incorporation of the delay measurement architecture for the considered clock domain. The column under “Delay increase” represents the delay increase of the longest path caused by incorporation of the proposed architecture. The column under “Timing overhead” represents the percentage of delay increase against the delay of the longest internal path before incorporation of the delay measurement architecture. As shown in Table \ref{tab:timing-overhead}, the timing impact of the proposed delay measurement architecture to the sample circuit is less than 0.7\% of the longest internal delay and can be negligible.
 
 \begin{table}[]
+  \begin{center}
+    \setlength{\tabcolsep}{1mm}
     \scriptsize
     \caption{Timing Overhead}\label{tab:timing-overhead}
-    \begin{tabular}{|c|c|c|c|c|c|}
-        \hline
-        Circuit       & clock domain     & \begin{tabular}[c]{@{}c@{}}Longest circuit internal \\ path delay (before) (ns)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Longest circuit internal \\ path delay (after) (ns)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Delay \\ increase (ps)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Timing \\ Overhead(\%)\end{tabular} \\ \hline
-            des\_perf     & clk              & 2.0280                                                                                       & 2.0377                                                                                      & 9.7                                                            & 0.48\%                                                         \\ \hline
-            wb\_conmax    & clk\_i           & 1.9256                                                                                       & 1.9644                                                                                      & 11.8                                                           & 0.60\%                                                         \\ \hline
-            aes\_core     & clk              & 2.7504                                                                                       & 2.7588                                                                                      & 8.4                                                            & 0.31\%                                                         \\ \hline
-            pci\_bridge32 & pci\_clk\_i      & 1.7575                                                                                       & 1.7656                                                                                      & 8.1                                                            & 0.46\%                                                         \\ \hline
-            ac97\_ctrl    & clk\_i           & 2.0684                                                                                       & 2.0790                                                                                      & 10.6                                                           & 0.51\%                                                         \\ \hline
-            mem\_ctrl     & clk\_i           & 2.0788                                                                                       & 2.0931                                                                                      & 14.3                                                           & 0.69\%                                                         \\ \hline
-            usb\_funct    & phy\_clk\_pad\_i & 1.8180                                                                                       & 1.8261                                                                                      & 8.1                                                            & 0.44\%                                                         \\ \hline
-            systemcaes    & clk              & 3.0745                                                                                       & 3.0813                                                                                      & 6.8                                                            & 0.22\%                                                     \\ \hline 
+    \begin{tabular}{@{}llcccc}
+        \toprule
+        Circuit       &  \ clock domain \      & \begin{tabular}[c]{@{}c@{}}Longest circuit internal \\ path delay (before) (ns)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Longest circuit internal \\ path delay (after) (ns)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Delay \\ increase (ps)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Timing \\ Overhead(\%)\end{tabular} \\ 
+        \midrule
+            des\_perf     & clk              & 2.0280                                                                                       & 2.0377                                                                                      & 9.7                                                            & 0.48\%                                                         \\ 
+            wb\_conmax    & clk\_i           & 1.9256                                                                                       & 1.9644                                                                                      & 11.8                                                           & 0.60\%                                                         \\ 
+            aes\_core     & clk              & 2.7504                                                                                       & 2.7588                                                                                      & 8.4                                                            & 0.31\%                                                         \\ 
+            pci\_bridge32 & pci\_clk\_i      & 1.7575                                                                                       & 1.7656                                                                                      & 8.1                                                            & 0.46\%                                                         \\ 
+            ac97\_ctrl    & clk\_i           & 2.0684                                                                                       & 2.0790                                                                                      & 10.6                                                           & 0.51\%                                                         \\ 
+            mem\_ctrl     & clk\_i           & 2.0788                                                                                       & 2.0931                                                                                      & 14.3                                                           & 0.69\%                                                         \\ 
+            usb\_funct    & phy\_clk\_pad\_i & 1.8180                                                                                       & 1.8261                                                                                      & 8.1                                                            & 0.44\%                                                         \\ 
+            systemcaes    & clk              & 3.0745                                                                                       & 3.0813                                                                                      & 6.8                                                            & 0.22\%                                                     \\ 
+            \bottomrule
     \end{tabular}
+  \end{center}
 \end{table}
 
 \subsubsection{Comparison A}
@@ -971,15 +993,20 @@ To compare with previous works, the delay measurement circuits using the propose
 
 
 \begin{table}[]
+  \begin{center}
+    \setlength{\tabcolsep}{1mm}
     \scriptsize
     \caption{Measurement Circuit Comparison}\label{tab:cmp}
-    \begin{tabular}{|c|c|c|c|ccc|}
+    \begin{tabular}{lccc|ccc}
         \hline
-        \multirow{2}{*}{Circuit} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Stage \\ Numbers\end{tabular}} & \multirow{2}{*}{Resolution} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Maximum \\ Measurement Range\end{tabular}} & \multicolumn{3}{c|}{Area (um2)}                                                    \\ \cline{5-7} 
-                                     &                                                                           &                             &                                                                                       & \multicolumn{1}{c|}{Combinational} & \multicolumn{1}{c|}{No Combinational} & Total \\ \hline
-                                     Proposed OCDM            & 8                                                                         & 6.62ps                      & 3295ps                                                                                & \multicolumn{1}{c|}{9547}          & \multicolumn{1}{c|}{612}              & 10159 \\ \hline
-                                     {\cite{datta2004chip}}                 & 245                                                                       & 13.45ps                     & 3295ps                                                                                & \multicolumn{1}{c|}{26894}         & \multicolumn{1}{c|}{18744}            & 45638 \\ \hline
+        \multirow{2}{*}{Circuit} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Stage \\ Numbers\end{tabular}} & \multirow{2}{*}{ \ Resolution \ } & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Maximum \\ Measurement Range\end{tabular}} & \multicolumn{3}{c}{Area (um2)}                                                    \\  \cline{5-7}
+                                     &                                                                           &                             &                                                                                       & \multicolumn{1}{c}{Combinational} & \multicolumn{1}{c}{No Combinational} & Total \\ 
+                                  \hline
+                                     Proposed OCDM            & 8                                                                         & 6.62ps                      & 3295ps                                                                                & \multicolumn{1}{c}{9547}          & \multicolumn{1}{c}{612}              & 10159 \\ 
+                                     {\cite{datta2004chip}}                 & 245                                                                       & 13.45ps                     & 3295ps                                                                                & \multicolumn{1}{c}{26894}         & \multicolumn{1}{c}{18744}            & 45638 \\ 
+                                     \hline
     \end{tabular}
+  \end{center}
 \end{table}
 
 The area overheads of the two delay measurement circuits are obtained using a commercial synthesis tool. It can be seen that the combinational, non-combinational, and the total area overheads of the proposed OCDM circuit are only 35.5\%, 3.3\%, and 22.3\% of that for the delay measurement circuit using the method from \cite{datta2004chip} respectively. It seems unfair to compare only the hardware overhead of the OCDM circuit of the proposed delay measurement architecture with the delay measurement circuit using themethod from \cite{datta2004chip} without considering the hardware overhead of the insertion of multiplexers at the endpoints of the PUMs. However, it should be noted that the OCDM circuit provides the same path delay measurement ability with that of the method from \cite{datta2004chip}, while the purpose of the insertion for 2-to-1 multiplexers to the end points of the PUMs is to calibrate the delay difference of import lines. Thereby, a higher precision of delay measurement results for the PUMs can be obtained by the proposed method as compared to the method from \cite{datta2004chip}.
@@ -989,7 +1016,7 @@ By considering the delay difference of the import lines in the proposed scheme, 
 
 1) A multiplexer is required to be inserted into the critical PUM in the Path-RO technique, which reduces the speed of high performance circuit. Clearly, in the proposed path delay measurement architecture, no extra cell has to be inserted in the PUM, while only a small overload from one input of the multiplexer is added in the PUM. Hence, the proposed technique has a weak impact to the delay of a critical path as compared to the Path-RO technique.
 
-2) The Path-RO technique can only measure either the delays of paths that begin at a clocked flip-flop or the delays of paths that end at this clocked flip-flop. The reason is that the flip-flop which is the start point of the PUM has to be modified to a calibration launch flip-flop (CLFF), while the flip-flop which is the end point of the PUM has to be modified to a calibration capture flip-flop (CLFF) with a different circuit structure. However, the delay of each circuit path chosen for delay measurement can be obtained by the proposed on-chip path delay measurement technique.
+2) The Path-RO technique can only measure either the delays of paths that begin at a clocked flip-flop or the delays of paths that end at this clocked flip-flop. The reason is that the flip-flop which is the start point of the PUM has to be modified to a calibration launch flip-flop (CLFF), while the flip-flop which is the end point of the PUM has to be modified to a calibration capture flip-flop (CCFF) with a different circuit structure. However, the delay of each circuit path chosen for delay measurement can be obtained by the proposed on-chip path delay measurement technique.
 
 3) In order to measure the delay of a path by using the Path-RO technique, one and two extra multiplexers are required to be added in the flip-flops which are stood at the input and output of the PUM, respectively. However, only one extra multiplexer is required to be added for the flip-flop which is the endpoint of the PUM in the proposed path delay measurement technique. Hence, the proposed method suffers from a significant lower hardware overhead as compared to the Path-RO technique.
 
@@ -999,13 +1026,13 @@ By considering the delay difference of the import lines in the proposed scheme, 
 In this paper, we have presented a novel on-chip path delay measurement technique for timing characterization and silicon debug. In the proposed OCDM circuit, the delay range of each delay stage is set to increase by a factor of two gradually from the last to the first delay stage. In addition, by conducting delay compensation, both improved delay measurement resolution and measurement precision can be provided when compared to the previous VDL based delay measurement schemes. The delay difference of the import lines for feeding the start and end transitions of the PUM into the OCDM circuit is also considered in the proposed technique, which can further provide a high precision for path delay measurement. Experimental results show that the proposed on-chip path delay measurement scheme works well. A small quantity of delay stages in OCDM circuit can obtain a large delay measurement range, and hence can provide a significant reduction in delay measurement time. Moreover, the area overhead of the proposed method is also significantly reduced as compared to previous works.
 
 \section{Lifetime Fault-Tolerant Circuit Design}
-In the past decades, the device and reliability communities have devoted much efforts to lifetime projection \cite{Sony}\cite{Atmel}, but less to design for lifetime reliability. This situation would be changed because the lifetime reliability is seriously challenged by the aggressive technology scaling \cite{degradation_05}\cite{ITRS_PIDS07}. One of the major impending (above 22nm) challenges comes from MOS transistor wearout \cite{ITRS_PIDS07}; NBTI (Negative Bias Temperature Instability)  and TDDB (Time Dependent Dielectric Breakdown) draw the most attentions over a wide variety of transistor aging mechanisms \cite{ITRS_PIDS07}. Both aging mechanisms can gradually degrade the performance of transistors over time \cite{failure_prediction_07}\cite{Self-calibrating_07} due to elevated threshold voltage \cite{NBTI_Impact05}\cite{Impact-of-NBTI_07} or degraded integrity of gate oxide \cite{OB_Invert_03}\cite{Impact_BD_04}\cite{Gate-oxide-breakdown-07}.
+In the past decades, the device and reliability communities have devoted much efforts to lifetime projection \cite{Sony}\cite{Atmel}, but less to design for lifetime reliability. This situation would be changed because the lifetime reliability is seriously challenged by the aggressive technology scaling \cite{degradation_05}\cite{ITRS_PIDS07}. One of the major impending (above 22nm) challenges comes from MOS transistor wearout \cite{ITRS_PIDS07}; NBTI (negative bias temperature instability) and TDDB (time dependent dielectric breakdown) draw the most attentions over a wide variety of transistor aging mechanisms \cite{ITRS_PIDS07}. Both aging mechanisms can gradually degrade the performance of transistors over time \cite{agarwal2007circuit}\cite{Self-calibrating_07} due to elevated threshold voltage \cite{NBTI_Impact05}\cite{wang2007impact} or degraded integrity of gate oxide \cite{OB_Invert_03}\cite{Impact_BD_04}\cite{Gate-oxide-breakdown-07}.
 
 To guarantee the chips' lifetime reliability, a common practice is reserving conservative timing margin---just like that for process variations \cite{ParameterVariations_DAC03}. However, the effectiveness of such approaches is diminishing, given that up to 10-20\% guardband has to be reserved to safely accommodate the aging-induced performance degradation---which can even offset the performance benefit from one-generation of technology advancement.
 
-Many researches have been conducted at different levels: device level \cite{DynamicNBTI_03}\cite{Modeling-and-minimization_06}, circuit level \cite{Compact-Modeling_07}\cite{Impact-of-NBTI_07}, and (micro)architecture level \cite{RAMP_04}\cite{Penelope_07}\cite{Framework_DSN07}. Particularly, Blome et al. proposed an online wearout detection approach through sensing the aging-induced delay \cite{Self-calibrating_07}. Agarwal et al., based on the same observation, proposed a sensor design dedicated for aging failure prediction \cite{failure_prediction_07}. Yan et al. presented a more versatile and cost efficient sensor design \cite{SVFD_09} which can also be used for aging detection.
+Many researches have been conducted at different levels: device level \cite{DynamicNBTI_03}\cite{Modeling-and-minimization_06}, circuit level \cite{Compact-Modeling_07}\cite{wang2007impact}, and (micro)architecture level \cite{Reliability-Aware_04}\cite{Penelope_07}\cite{Framework_DSN07}. Particularly, Blome et al. proposed an online wearout detection approach through sensing the aging-induced delay \cite{Self-calibrating_07}. Agarwal et al., based on the same observation, proposed a sensor design dedicated for aging failure prediction \cite{agarwal2007circuit}. Yan et al. presented a more versatile and cost efficient sensor design \cite{SVFD_09} which can also be used for aging detection.
 
-Although the prior sensor designs prepare a ground for aging-aware designs, few researches are conducted so far to study how to effectively use them; this work aims to serve this purpose. The lifetime of a chip is governed by the "weakest-link principle"---usually only a minority of transistors suffer large aging degradation reflected in excessive path delay. The aging sensors can capture this change; however, previous solutions such as turning voltage and/or frequency \cite{RAMP_04}, reducing individual core utilization \cite{Facelift_08}, and duplicating hardware resources \cite{Duplication_05}\cite{WearoutRecovery_08} do not use such fine-grained detection capability sufficiently. Although those architecture- and application-level approaches are somewhat effective to remedy the aged chips, these coarse-grained solutions trading either performance or hardware resources for lifetime may be far from efficient due to the blindness to the minority of fine-grained "weakest links" which can be identified by the aging sensors.
+Although the prior sensor designs prepare a ground for aging-aware designs, few researches are conducted so far to study how to effectively use them; this work aims to serve this purpose. The lifetime of a chip is governed by the "weakest-link principle"---usually only a minority of transistors suffer large aging degradation reflected in excessive path delay. The aging sensors can capture this change; however, previous solutions such as turning voltage and/or frequency \cite{Reliability-Aware_04}, reducing individual core utilization \cite{Facelift_08}, and duplicating hardware resources \cite{srinivasan2005exploiting}\cite{WearoutRecovery_08} do not use such fine-grained detection capability sufficiently. Although those architecture- and application-level approaches are somewhat effective to remedy the aged chips, these coarse-grained solutions trading either performance or hardware resources for lifetime may be far from efficient due to the blindness to the minority of fine-grained "weakest links" which can be identified by the aging sensors.
 
 
 Above analysis motivates us to propose a new approach to exploiting fine-grained aging adaptability. Unlike those coarse-grained approaches, the fine-grained approach can cope with the "weakest-links" more locally and efficiently, thereby making it possible to improve lifetime reliability while without compromising with the architectural performance and coarse-grained hardware resources. In particular, we make three contributions:
@@ -1021,19 +1048,19 @@ The effectiveness of ReviveNet has been evaluated through incorporating it into 
 
 
 \subsection{Aging Symptoms and Aging Sensors}
-The aging-induced delay is a suitable symptom candidate \cite{Self-calibrating_07} \cite{failure_prediction_07} \cite{failure_prediction2_08}. For example, Blome et al. took the TDDB induced delay as the symptom for wearout detection \cite{Self-calibrating_07}. Agarwal. et al, took the NBTI induced delay as the symptom for aging failure prediction \cite{failure_prediction_07}\cite{failure_prediction2_08}. We also take aging delay as the symptom in this work.
+The aging-induced delay is a suitable symptom candidate \cite{Self-calibrating_07} \cite{agarwal2007circuit} \cite{failure_prediction2_08}. For example, Blome et al. took the TDDB induced delay as the symptom for wearout detection \cite{Self-calibrating_07}. Agarwal. et al, took the NBTI induced delay as the symptom for aging failure prediction \cite{agarwal2007circuit}\cite{failure_prediction2_08}. We also take aging delay as the symptom in this work.
 
-Aging-awareness can be realized by employing some dedicated aging sensors. The fundamental working principle of sensors is on-line delay fault detection. The only difference between the aging sensing and traditional delay fault detection is that the former takes place in a safe timing interval called "Guard band" \cite{failure_prediction_07}, while the latter takes place in the interval after the effective clock edge called "Detection slack" \cite{SVFD_09}. As Figure \ref{agingdelay} shows, initially, in fresh state, no signal transitions occur in guard band, but after suffering form aging, some transitions could be delayed into guard band. Since the signal should have been stabilized before entering the guard band, we call the event of such a ``faulty" transition in guard band as a Stability Violation \cite{SVFD_09}. It is worthy to note that the detected aging delay, unlike conventional delay faults, won't cause any timing fault (a.k.a. Timing violation).
+Aging-awareness can be realized by employing some dedicated aging sensors. The fundamental working principle of sensors is on-line delay fault detection. The only difference between the aging sensing and traditional delay fault detection is that the former takes place in a safe timing interval called "Guard band" \cite{agarwal2007circuit}, while the latter takes place in the interval after the effective clock edge called "Detection slack" \cite{SVFD_09}. As Figure \ref{agingdelay} shows, initially, in fresh state, no signal transitions occur in guard band, but after suffering form aging, some transitions could be delayed into guard band. Since the signal should have been stabilized before entering the guard band, we call the event of such a ``faulty" transition in guard band as a Stability Violation \cite{SVFD_09}. It is worthy to note that the detected aging delay, unlike conventional delay faults, won't cause any timing fault (a.k.a. Timing violation).
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\textwidth]{fig2-12.eps}%{agingdelay.eps}
+\includegraphics[width=0.6\textwidth]{fig2-12}%{agingdelay.eps}
    \caption{The timing of Aging delay and delay fault}\label{agingdelay}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\textwidth]{fig2-13.eps}%{sensorsetup.eps}
+\includegraphics[width=0.65\textwidth]{fig2-13}%{sensorsetup.eps}
 \vspace{-0.5cm}
    \caption{Sensor setup}\label{setupsonsor}
 \end{figure}
@@ -1053,38 +1080,38 @@ Figure \ref{syntop} illustrates the ReviveNet architecture. Each stage is monito
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.7\textwidth]{fig2-14.eps}%{revivenet.eps}
+\includegraphics[width=0.65\textwidth]{fig2-14}%{revivenet.eps}
    \caption{ReviveNet architecture}\label{syntop}
 \end{figure}
 
 \begin{figure}[h]
  \centering
-  \includegraphics[width=0.7\textwidth]{fig2-15.eps}%{ba_fa.eps}
+  \includegraphics[width=0.7\textwidth]{fig2-15}%{ba_fa.eps}
   \caption{Example of adaptation}\label{ba_fa}
 \end{figure}
 
-Let's explain the basic idea of ReviveNet with a simple example. Figure \ref{ba_fa} shows a part of a pipeline, where each arrow denotes a timing path and the length of it represents corresponding delay; in particular, the critical path in the middle stage is denoted by a bold arrow. After experiencing some aging, suppose that the delay of the critical path is going to exceed the clock period---an impending aging failure, an aging sensor monitoring this path detects the impending failure \cite{failure_prediction_07}\cite{SVFD_09} and flags an aging alarm; then, three local adaptation options can be enabled to tolerate this aging delay: 1) backward skew the clock of $K$th flip-flop---BTA, 2) forward skew the clock of $(K-1)$st flip-flop---FTA, or 3) both FTA and BTA. The specific adaptations are governed by a finite state machine, referred to agent.
+Let's explain the basic idea of ReviveNet with a simple example. Figure \ref{ba_fa} shows a part of a pipeline, where each arrow denotes a timing path and the length of it represents corresponding delay; in particular, the critical path in the middle stage is denoted by a bold arrow. After experiencing some aging, suppose that the delay of the critical path is going to exceed the clock period---an impending aging failure, an aging sensor monitoring this path detects the impending failure \cite{agarwal2007circuit}\cite{SVFD_09} and flags an aging alarm; then, three local adaptation options can be enabled to tolerate this aging delay: 1) backward skew the clock of $K$th flip-flop---BTA, 2) forward skew the clock of $(K-1)$st flip-flop---FTA, or 3) both FTA and BTA. The specific adaptations are governed by a finite state machine, referred to agent.
 
 The above conceptual example can just convey a very basic idea of ReviveNet; we can gain more insights into the ReviveNet's operations and underling design tradeoffs by answering the following questions:
 
 {\bf 1) Why are BTA and FTA feasible?}
 
-Clearly, BTA or FTA can help tolerate the aging delay of the target critical path only if there is timing imbalance between the corresponding paths, i.e. all upstream paths of $(K-1)$st flip-flop, or all downstream paths of $K$th flip-flop are non-critical. We call such imbalance as path-grained (or, localized) adaptability. We will use a case study (Section XXX investigation) to show that the potential of such localized adaptability, which ReviveNet aims to exploit, is quite attractive.
+Clearly, BTA or FTA can help tolerate the aging delay of the target critical path only if there is timing imbalance between the corresponding paths, i.e. all upstream paths of $(K-1)$st flip-flop, or all downstream paths of $K$th flip-flop are non-critical. We call such imbalance as path-grained (or, localized) adaptability. We will use a case study (Section \ref{sec:investigation} investigation) to show that the potential of such localized adaptability, which ReviveNet aims to exploit, is quite attractive.
 
 {\bf 2) Where the sensors and agents should be deployed?}
 
-This problem is trivial if both the critical paths and aging impacts can be well-predicted: every critical path that is prone to suffer aging impacts should be monitored by a sensor. Unfortunately, though the critical paths can be somewhat distinguished from non-critical paths with some sophisticated SSTA (statistical static timing analysis) approaches, many researches have been evident that the aging degree of individual transistor highly depends on the physical geometries, defect density and the stress states during working mode. In other words, the aging degree of individual transistor is highly unpredictable; hence it seems hopeless to identify the aging-prone critical paths. We take an engineering way to tackle this problem: conservatively put all critical paths under monitor. Thought it is not an theoretically optimum option, the experimental results show that such engineering way is still cost-efficient (Section XXX Case Study).
+This problem is trivial if both the critical paths and aging impacts can be well-predicted: every critical path that is prone to suffer aging impacts should be monitored by a sensor. Unfortunately, though the critical paths can be somewhat distinguished from non-critical paths with some sophisticated SSTA (statistical static timing analysis) approaches, many researches have been evident that the aging degree of individual transistor highly depends on the physical geometries, defect density and the stress states during working mode. In other words, the aging degree of individual transistor is highly unpredictable; hence it seems hopeless to identify the aging-prone critical paths. We take an engineering way to tackle this problem: conservatively put all critical paths under monitor. Thought it is not an theoretically optimum option, the experimental results show that such engineering way is still cost-efficient (Section \ref{section_casestudy} Case Study).
 
-Deploying agents is based on the sensors deployment and specific circuit topology. The detail can be found in (Section XXX Deploy Agent Sensor).
+Deploying agents is based on the sensors deployment and specific circuit topology. The detail can be found in (Section \ref{deploy_agentsensor} Deploy Agents and Sensors).
 
 {\bf 3) What's the adaptation logic of agents?}
 
-Usually, one sensor is able to monitor multiple critical paths to reduce the implementation overhead. The side-effect is decreased "resolution"---when a sensor flags an aging alarm, the agent actually cannot immediately recognize that which path (or paths) causes this alarm; hence the agent needs to follow a policy to efficiently identify the root of the alarm. Given that the aging is a progressive process and thus does not need to be in realtime accommodated, we propose a round-robin trial adaptation mechanism---the agent travels across a set of prioritized adaptation states to track back the source of the alarm and then tries the best to accommodate it (Section XXX RRTA).
+Usually, one sensor is able to monitor multiple critical paths to reduce the implementation overhead. The side-effect is decreased "resolution"---when a sensor flags an aging alarm, the agent actually cannot immediately recognize that which path (or paths) causes this alarm; hence the agent needs to follow a policy to efficiently identify the root of the alarm. Given that the aging is a progressive process and thus does not need to be in realtime accommodated, we propose a round-robin trial adaptation mechanism---the agent travels across a set of prioritized adaptation states to track back the source of the alarm and then tries the best to accommodate it (Section \ref{section_rrta} RRTA).
 
 
 {\bf 4) How to implement the intentional clock skew?}
 
-The intentional skew is used to enable BTA and FTA.  One way to obtain the intentional skew is by inserting delay buffers \cite{Recycle_07}. However, the drawback of such delay-buffer based design is poor controllability. For example, suppose that during the early years of service life almost no adaptation is required, but these buffers still suffer from aging, contribute to leakage power, and so on. We propose a new implementing scheme to obtain the skewed clocks in a highly controllable way, while minimizing the side effects to the adaptation-free period (Section XXX Clcok Gen, XXX Clock Gate).
+The intentional skew is used to enable BTA and FTA.  One way to obtain the intentional skew is by inserting delay buffers \cite{Recycle_07}. However, the drawback of such delay-buffer based design is poor controllability. For example, suppose that during the early years of service life almost no adaptation is required, but these buffers still suffer from aging, contribute to leakage power, and so on. We propose a new implementing scheme to obtain the skewed clocks in a highly controllable way, while minimizing the side effects to the adaptation-free period (Section \ref{section_clcokgen} Clcok Gen, \ref{section_clockgate} Clock Gate).
 
 
 {\bf 5) What if the infrastructure of ReviveNet, sensors and agents, fail to work due to aging?}
@@ -1094,7 +1121,7 @@ ReviveNet is relatively aging resistant because it does not need to be always-on
 
 {\bf 6) How much extended lifetime can be achieved?}
 
-This question is hard to answer due to lack of accurate models that capture the relationship between a variety of aging mechanisms and aging delay. To quantitatively study the MTTF (Mean-Time-To-Failure) improvement, we propose a ReviveNet-enhanced  reliability model in which the relationship is condensed to a hypothetical function $\delta$ (Section XXX Model). Then, we instantiate the function based on the well-studied NBTI mechanism (Section XXX Case Study) to show the effect of ReviveNet, though the reliability model can also be applied to other aging mechanisms that need more intensive studies in the future. Experimental results show that up to 48.7\% MTTF improvement can be achieved.
+This question is hard to answer due to lack of accurate models that capture the relationship between a variety of aging mechanisms and aging delay. To quantitatively study the MTTF (Mean-Time-To-Failure) improvement, we propose a ReviveNet-enhanced  reliability model in which the relationship is condensed to a hypothetical function $\delta$ (Section \ref{section_model} Model). Then, we instantiate the function based on the well-studied NBTI mechanism (Section \ref{section_casestudy} Case Study) to show the effect of ReviveNet, though the reliability model can also be applied to other aging mechanisms that need more intensive studies in the future. Experimental results show that up to 48.7\% MTTF improvement can be achieved.
 
 
 Figure \ref{curve} qualitatively shows the ReviveNet-enhanced lifetime. When ReviveNet is too exhausted to make any effective adaptation---if any of the agents fails to accommodate an impending aging failure, the chip is judged reaching the end of lifetime. ReviveNet can also readily indicate the "incurable" failure; then, one can proactively take actions, such as replacing the aged chips, degrading the architectural performance, to minimize the impacts of failure.
@@ -1102,7 +1129,7 @@ Figure \ref{curve} qualitatively shows the ReviveNet-enhanced lifetime. When Rev
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.75\textwidth]{fig2-16.eps}%{curve.eps}
+\includegraphics[width=0.55\textwidth]{fig2-16}%{curve.eps}
    \caption{Anticipated effect of ReviveNet}\label{curve}
 \end{figure}
 
@@ -1136,14 +1163,14 @@ In the following cases can yield critical paths:
 A critical path in case 2) and 3) can gain extra $TH/2$ slack (note that we let the slack-providing paths still hold at least $TH/2$ slack); that in case 1) can gain extra $TH/2+TH/2$ slack; while that in case 4) cannot gain any extra slack.
 
 
-Threshold $TH$ is a key factor affecting the design tradeoffs. On one hand, the larger $TH$, the higher percentage of UAFFs, thus more critical paths will be rendered unadaptable; on the other, the larger $TH$ can facilitate more aggressive time stealing on adaptable paths. In (Section XXX Case Study), we will show that neither over-large nor over-small $TH$ can lead to an optimum design tradeoff.
+Threshold $TH$ is a key factor affecting the design tradeoffs. On one hand, the larger $TH$, the higher percentage of UAFFs, thus more critical paths will be rendered unadaptable; on the other, the larger $TH$ can facilitate more aggressive time stealing on adaptable paths. In (Section \ref{section_casestudy} Case Study), we will show that neither over-large nor over-small $TH$ can lead to an optimum design tradeoff.
 
-\subsubsection{Self-Adaptive Design Example}
+\subsubsection{Self-Adaptive Design Example}\label{sec:investigation}
 As a case study, the following investigates the intrinsic timing imbalance in a industry design.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.75\textwidth]{fig2-17.eps}
+\includegraphics[width=0.75\textwidth]{fig2-17}
     \caption{Distribution of flip-flops at different $TH$}\label{ff_type}
 \end{figure}
 
@@ -1156,7 +1183,7 @@ The agents are responsible for controlling the localized adaptations. Before del
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.75\textwidth]{fig2-18.eps}
+\includegraphics[width=0.7\textwidth]{fig2-18}
    \caption{Example of adaptive clock assignment (agent is responsible for
    generating the clock-steering signals)}\label{affs}
 \end{figure}
@@ -1167,15 +1194,33 @@ In Figure \ref{affs}, suppose that a sensor is deployed to monitor all of UAFFs 
 
 When a sensor raises an aging alarm, it could be traced back to single or multiple critical paths. Fortunately, given that circuit aging usually is a gradual process, the response of an intended adaptation does not need to be in realtime. This allowable adaptation latency can justify the proposed RRTA approach below.
 
-RRTA performs in an "identify-then-adapt" manner. Each trial represents an adaptation state---the value of clock-steering signals of related flip-flops. Figure \ref{rradp} presents the procedure of RRTA.
+RRTA performs in an "identify-then-adapt" manner. Each trial represents an adaptation state---the value of clock-steering signals of related flip-flops. Algorithm \ref{alg:rr} presents the procedure of RRTA.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.7\textwidth]{fig2-19.eps}%{rrta.eps}
-   \caption{Round-Robin Trial Adaptation}\label{rradp}
-\end{figure}
+%\begin{figure}[h]
+%\centering
+%\includegraphics[width=0.7\textwidth]{fig2-19}%{rrta.eps}
+%   \caption{Round-Robin Trial Adaptation}\label{rradp}
+%\end{figure}
 
-The following clarifies how to define the set of adaptation states (related to line 2 in Figure \ref{rradp}). Generally, each agent is fed by an aging alarm and a request from another agent (as shown in Figure \ref{syntop}). For agent $A_K$ and a set of flip-flops $FF$, the aging alarms only trigger the backward adaptations to BAFFs, and the requests triggers the forward adaptations to FAFFs. The adaptation states are described with the following example.
+\begin{algorithm}\label{alg:rr}
+  \caption{Round-Robin Trial Adaptation (K)}
+  \KwData{The $K^{th}$ Agent recieves an aging emergency;}
+  \For{each adaptation state candidates}{
+      conduct a trial adaptation\;
+      \eIf{the emergency is eliminated}
+      {
+        break\;\tcp*[h]{Adaptation succeeded!}
+      }
+      {
+       Recover this trial adaptation\;
+       \lIf{all the adaptation states have been reached}{break\;\tcp*[h]{Adaptation failed!}}
+      }
+  }
+\end{algorithm}
+
+
+
+The following clarifies how to define the set of adaptation states (related to line 1 in Algorithm \ref{alg:rr}). Generally, each agent is fed by an aging alarm and a request from another agent (as shown in Figure \ref{syntop}). For agent $A_K$ and a set of flip-flops $FF$, the aging alarms only trigger the backward adaptations to BAFFs, and the requests triggers the forward adaptations to FAFFs. The adaptation states are described with the following example.
 
 \exmp\label{rrtaexample}  For the $K$th stage with downstream flip-flops $FF_k$=\{$f_1^k$, \ldots, $b_1^k$, $b_2^k$, $b_3^k$, $u_1^k$\} and upstream flip-flops $FF_{k-1}$=\{$f_1^{k-1}$, $f_2^{k-1}$, $f_3^{k-1}$, $f_4^{k-1}$, $b_1^{k-1}$, \ldots, $u_1^{k-1}$, \ldots\}, where $f$, $b$, and $u$ denote FAFF, BAFF, and UAFF, respectively. Agent $A_K$ and  $A_{K-1}$ handles $FF_k$ and $FF_{k-1}$, respectively. Clearly, only \{$b_1^k$, $b_2^k$, $b_3^k$\} and \{$f_1^{k-1}$, $f_2^{k-1}$, $f_3^{k-1}$, $f_4^{k-1}$\} can contribute to the $K$th stage's adaptations. Furthermore, suppose that only $f_1^{k-1}$, $f_2^{k-1}$, $f_3^{k-1}$, $f_4^{k-1}$ are related inputs to $b_1^k$, $b_2^k$, $b_3^k$. The correspondence of related FAFFs and BAFFs is easy to identify with logic core generation algorithms which has been well-studied and widely used on ATPG (Automatic Test Patten Generation) \cite{POIROT_00}.
 
@@ -1207,7 +1252,7 @@ FAS_4=\;&\{1111\}. \nonumber
 \subsubsection {Agent Implementation}
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\textwidth]{fig2-20.eps}%{agent.eps}
+\includegraphics[width=0.36\textwidth]{fig2-20}%{agent.eps}
    \caption{Adaptation agent}\label{agent}
 \end{figure}
 
@@ -1224,7 +1269,7 @@ Figure \ref{synadp} exemplifies the change of a filter counter over time. The no
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{fig2-21.eps}%{cnt.eps}
+\includegraphics[width=0.8\textwidth]{fig2-21}%{cnt.eps}
    \caption{Example of filter counter change}\label{synadp}
 \end{figure}
 
@@ -1246,7 +1291,7 @@ For case (b), the overlap can reduce some efficiency of such optimization. Remov
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{fig2-22.eps}%{logiccone2.eps}
+\includegraphics[width=0.7\textwidth]{fig2-22}%{logiccone2.eps}
    \caption{Logic cones}\label{logiccone}
 \end{figure}
 
@@ -1254,7 +1299,7 @@ Each agent owning a private false-alarm filter is cost-inefficient, since such p
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{fig2-23.eps}%{agent_share.eps}
+\includegraphics[width=0.45\textwidth]{fig2-23}%{agent_share.eps}
    \caption{Two agents share one false alarm filter}\label{agent_share}
 \end{figure}
 
@@ -1264,7 +1309,7 @@ The above have described the individual agent design and functionality; the foll
 \subsubsection{Deploy Agents and Sensors}\label{deploy_agentsensor}
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{fig2-24.eps}%{deploy2.eps}
+\includegraphics[width=0.8\textwidth]{fig2-24}%{deploy2.eps}
    \caption{Deploying sensors and agents}\label{delpoy}
 \end{figure}
 
@@ -1294,7 +1339,7 @@ where $N_{agent}^{dn}$ denotes the number of downstream agents and $N_{agent}^{u
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{fig2-25.eps}%{agent_set.eps}
+\includegraphics[width=0.95\textwidth]{fig2-25}%{agent_set.eps}
 \vspace{-0.2cm}
    \caption{A group of synergistic agents for a n-stage pipeline}\label{sac}
 \end{figure*}
@@ -1313,7 +1358,7 @@ In our scheme, we point out that although ReviveNet needs two extra clocks, our 
 \subsubsection{ReviveNet-supported Clock Gating}\label{section_clockgate}
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.7\textwidth]{fig2-26.eps}%{clkgate.eps}
+\includegraphics[width=0.7\textwidth]{fig2-26}%{clkgate.eps}
    \caption{ReviveNet-supported clock gating}\label{clkgate}
 \end{figure}
 
@@ -1425,7 +1470,7 @@ For the both curves, because $\Delta_I=\Delta_{II}$, so
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.7\textwidth]{fig2-27.eps}%{weibull2.eps}
+\includegraphics[width=0.6\textwidth]{fig2-27}%{weibull2.eps}
 \vspace{-0.2cm}
    \caption{Weibull failure rate in wearout period}\label{weibull}
 \end{figure}
@@ -1437,16 +1482,16 @@ t_{16,II}=t_{16,I}+g(\delta) \mbox{ and }  t_{63,II}=t_{63,I}+g(\delta)
 
 where $g(\delta)$ denotes the lifetime extension contributed by tolerating $\delta$ aging delay; $\delta$ can be $0$, $TH/2$, or $TH$, determined by the specific adaptability of paths. Clearly, function $g(\delta)$ is highly dependent to specific aging mechanisms. Unfortunately, no such function proposed so far that can accurately reflect the performance degradation over time under a variety of aging mechanisms (some of them such as dielectric breakdown even have not been well-understood by the community \cite{Reliability_limits_IBM02}). In the following case study, we just use the relatively well-studied NBTI, one of the major reliability challenge, as target aging mechanism to evaluate the ReviveNet. We expect the physical community to contribute a much more versatile $g(\delta)$ in the near future.
 
-Paul. et al. proposed a NBTI circuit delay model that capture the relation ship between the threshold voltage change and resultant delay degradation \cite{NBTI_Impact05}: the NBTI degradation is much fast at the early years, and then slowed down later, as the trend shown in Figure \ref{nbti}. Moreover, Figure \ref{nbti} also shows the relation between $\delta$ and $g$; we obtain $g(\delta)$ by regressing the results in \cite{Impact-of-NBTI_07}. More details are presented in Section 7.2.
+Paul. et al. proposed a NBTI circuit delay model that capture the relation ship between the threshold voltage change and resultant delay degradation \cite{NBTI_Impact05}: the NBTI degradation is much fast at the early years, and then slowed down later, as the trend shown in Figure \ref{nbti}. Moreover, Figure \ref{nbti} also shows the relation between $\delta$ and $g$; we obtain $g(\delta)$ by regressing the results in \cite{wang2007impact}. More details are presented in Section 7.2.
 
 
-\subsubsection{Implication of $TH$}
+\subsubsection{Implication of $TH$}\label{sec:th}
 Eq. (\ref{new_term}) implies an essential tradeoff behind ReviveNet. Note that the critical paths in Group 3 is free from ReviveNet; only the Group 1 and Group 2 can contribute to the lifetime improvement. However, given a target circuits, the sizes of the three groups are depends on the $TH$: on one hand, larger $TH$ can result higher percentage of of UAFFs, and thereby more critical paths in Group 3, and thus leads to fewer adaptable critical paths; on the other, the larger $TH$ implies that more aggressive tolerability to aging delay on those adaptable critical paths. Hence, given a circuit, there should be an optimum $TH$ that can maximize the $EX$.
 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\textwidth]{fig2-28.eps}%{nbti2.eps}
+\includegraphics[width=0.45\textwidth]{fig2-28}%{nbti2.eps}
 \vspace{-0.3cm}
    \caption{NBTI degradation}\label{nbti}
 \end{figure}
@@ -1472,20 +1517,21 @@ Finally, we present the overhead in terms of area, power, and performance.
 \begin{figure*}[t]
 \centering \subfigure[\small{Skew variation: 1\%}]
 %{\includegraphics[width=0.34\textwidth]{EX2_1percent.eps}} \hspace{-0.5cm}
-{\includegraphics[width=0.34\textwidth]{fig2-29a.eps}} \hspace{-0.5cm}
+{\includegraphics[width=0.34\textwidth]{fig2-29a}} \hspace{-0.4cm}
 \subfigure[\small{Skew variation: 3\%}]
 %{\includegraphics[width=0.34\textwidth]{EX2_3percent.eps}}\hspace{-0.5cm}
-{\includegraphics[width=0.34\textwidth]{fig2-29b.eps}}\hspace{-0.5cm}
+{\includegraphics[width=0.34\textwidth]{fig2-29b}} \hspace{-0.4cm}
 \subfigure[\small{Skew variation: 5\%}]
 %{\includegraphics[width=0.34\textwidth]{EX2_5percent.eps}} \vspace{-0.2cm}
-{\includegraphics[width=0.34\textwidth]{fig2-29c.eps}} \vspace{-0.2cm}
+{\includegraphics[width=0.34\textwidth]{fig2-29c}} \hspace{-0.4cm}
+\vspace{-0.2cm}
 \caption{MTTF improvement at different $TH$ and clock skew variations}\label{ex}
 \end{figure*}
 
 \textbf{Lifetime Improvement Analysis:} We conduct the lifetime evaluation based on the 65nm technology (the STA results actually are based
 on a 180nm technology due to lack of 65nm compiler libraries. To match the following analysis, we
 scale the STA results to 65nm based on scaling theory \cite{JMRabaey}). The NBTI degradation
-results are from \cite{Impact-of-NBTI_07}. The lifetime is studied at different configurations:
+results are from \cite{wang2007impact}. The lifetime is studied at different configurations:
 without ReviveNet, and with ReviveNet, at $TH$=5\% (of the delay of the most critical path), 10\%,
 15\%, 20\%, 25\%, 30\%, respectively. The necessary $g(\delta)$ at these $TH$ is as follows:
 \begin{equation}\label{reg}{\small
@@ -1532,7 +1578,7 @@ overhead largely depends on the parameter $TH$ (section 7.2).
 \noindent{\bf 1. Area Overhead.}
 
 {\bf Sensor Configuration:} The number of sensors for each stage depends on specific sensor design
-\cite{failure_prediction_07}\cite{SVFD_09};
+\cite{agarwal2007circuit}\cite{SVFD_09};
 
 we take the configuration of one sensor handles eight signals.
 
@@ -1550,7 +1596,7 @@ technology. Figure \ref{totalarea} shows the overall area overhead under differe
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.6\textwidth]{fig2-30.eps}%{areaoverhead.eps}
+\includegraphics[width=0.55\textwidth]{fig2-30}%{areaoverhead.eps}
 \vspace{-0.3cm}
    \caption{Area overhead with different sharing configurations}\label{totalarea}
 \end{figure}
@@ -1600,12 +1646,12 @@ overhead can be significantly reduced even after the onset of wearout.
 ReviveNet needs some sensors. From circuit design perspective, these sensors can cause some
 capacitance load to the target pipelines. This concern, however, will not be substantial because
 the performance penalty imposed by such capacitance load is less than 1\%
-\cite{failure_prediction_07}\cite{SVFD_09}.
+\cite{agarwal2007circuit}\cite{SVFD_09}.
 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\textwidth]{fig2-31.eps}%{poweroverhead_workmode.eps}
+\includegraphics[width=0.5\textwidth]{fig2-31}%{poweroverhead_workmode.eps}
 \vspace{-0.3cm}
    \caption{Power overhead of sensors and agents in working mode}\label{logicpower}
 \end{figure}

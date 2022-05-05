@@ -9,12 +9,12 @@
 \chapter{Fault-Tolerant General Purposed Processors}
 
 
-\abstract{In field degradation of manycore processors poses a grand challenge to core management, largely because the degradation is hard to quantify. We propose a novel core-level degradation quantification scheme, CoreRank, to facilitate the management. We first develop a new degradation metric, called “healthy condition”, to capture the implication of performance degradation of a core with specific degraded components. Then, we propose a performance sampling scheme by using micro-operation streams, called snippet, to statistically quantify cores’ healthy condition.We find that similar snippets exhibit stable performance distribution, which makes them ideal micro-benchmarks to testify the core-level healthy conditions. We develop a hardware-implemented version of CoreRank based on bloom filter and hash table. Unlike the traditional “faulty” or “fault-free” judgement, CoreRank provides a key facility to make better use of those imperfect cores that suffered from various progressive aging mechanisms such as NBTI, HCI. Experimental results show that CoreRank successfully hides significant performance degradation of a defective manycore processor in which even more than half of the cores are salvaged from various defects.}
+\abstract{In field degradation of manycore processors poses a grand challenge to core management, largely because the degradation is hard to quantify. We propose a novel core-level degradation quantification scheme, CoreRank, to facilitate the management. We first develop a new degradation metric, called “healthy condition”, to capture the implication of performance degradation of a core with specific degraded components. Then, we propose a performance sampling scheme by using micro-operation streams, called snippet, to statistically quantify cores’ healthy condition.We find that similar snippets exhibit stable performance distribution, which makes them ideal micro-benchmarks to testify the core-level healthy conditions. We develop a hardware-implemented version of CoreRank based on bloom filter and hash table. Unlike the traditional “faulty” or “fault-free” judgement, CoreRank provides a key facility to make better use of those imperfect cores that suffered from various progressive aging mechanisms such as negative bias temperature instability (NBTI), hot carrier injection (HCI). Experimental results show that CoreRank successfully hides significant performance degradation of a defective manycore processor in which even more than half of the cores are salvaged from various defects.}
 
 \section{Challenges of Fault-Tolerant Processor Design}
 
 \subsection{Processor Vulnerability Characterizing}
-With the continuous decrease of CMOS feature size and threshold voltage, microprocessors are expected to see increasing failure rates due to intermittent faults, in company with soft errors and hard faults \cite{mcpherson2006reliability} \cite{constantinescu2003trends} \cite{karnik2004characterization}. Intermittent faults are hardware errors which occur frequently and irregularly for a period of time, commonly due to manufacturing residuals or process variation, combined with voltage and temperature fluctuations \cite{constantinescu2002impact} \cite{wells2008adapting}. Soft errors, namely transient faults, are caused by energetic particles such as alpha particles from packaging material and neutrons from the atmosphere. Hard faults reflect irreversible physical changes, mainly caused by manufacturing defects, such as contaminations in silicon devices or wear-out of materials. Conventionally, soft errors and hard faults have been considered as the major factor of program failures, and the effects of these faults have been extensively analyzed \cite{shivakumar2002modeling} \cite{srinivasan2004impact}. Nevertheless, field collected data and failure analysis show that intermittent faults also become a major source of failures in new-generation microprocessors \cite{constantinescu2008intermittent}. Without protection techniques, the microprocessor failure rates due to these faults will greatly increase with the exponential growth in the number of transistors.
+With the continuous decrease of CMOS feature size and threshold voltage, microprocessors are expected to see increasing failure rates due to intermittent faults, in company with soft errors and hard faults \cite{mcpherson2006reliability} \cite{constantinescu2003trends} \cite{karnik2004characterization}. Intermittent faults are hardware errors which occur frequently and irregularly for a period of time, commonly due to manufacturing residuals or process variation, combined with voltage and temperature fluctuations \cite{constantinescu2002impact} \cite{wells2008adapting}. Soft errors, namely transient faults, are caused by energetic particles such as alpha particles from packaging material and neutrons from the atmosphere. Hard faults reflect irreversible physical changes, mainly caused by manufacturing defects, such as contaminations in silicon devices or wear-out of materials. Conventionally, soft errors and hard faults have been considered as the major factor of program failures, and the effects of these faults have been extensively analyzed \cite{Shivakumar_DSN02} \cite{gupta1991impact}. Nevertheless, field collected data and failure analysis show that intermittent faults also become a major source of failures in new-generation microprocessors \cite{constantinescu2008intermittent}. Without protection techniques, the microprocessor failure rates due to these faults will greatly increase with the exponential growth in the number of transistors.
 
 To improve system reliability, prior work has proposed a variety of techniques to deal with these faults from circuit level to architecture level. Optimal protection techniques should meet a predefined reliability budget while with minimal performance, area, and energy penalties. As the number of ways that different faults manifest are likely to rise, leading to a consequential increase in the complexity and overhead of the techniques to tolerate them. Traditional protection techniques, for example, dual or triple modular redundancy results in at least 100\% hardware and energy overhead \cite{Slegel1999IBM} \cite{wood1999data}. Solutions such as full redundant multithreading (RMT) and various partial redundancy schemes based on RMT also lead to about 30\% performance degradation \cite{mukherjee2002detailed} \cite{reinhardt2000transient} \cite{parashar2006slick} \cite{shyam2006ultra}. In a recent workshop, an industry panel converged on a 10\% area overhead target to handle all sources of chip errors as a guide for microprocessor designers \cite{li2008understanding}. Therefore, designers should evaluate the pros and cons of different protection techniques. Heavyweight protection techniques (such as strict hardware duplication) can ensure system reliability but incur unnecessary overheads, while lightweight protection (such as partial software redundancy) techniques can reduce the protection overheads but may be hard to satisfy the desired reliability goal.
 
@@ -25,7 +25,7 @@ In the first part of this chapter, we propose a metric intermittent vulnerabilit
 \subsection{Sick Processor Management}
 The growing integration density of transistors has been escorted by progressive semiconductor technologies for the past three decades. Unsurprisingly, the scale and complexity of modern microprocessors have reached a unprecedented level, and 1000-core processor will not be a buzz word but reality \cite{thousandcore}.  Unfortunately, we still face grand challenges to drive such powerful processor with a sea of computing cores to work efficiently.
 
-One of the looming challenges is core management, which directly determines the harvestable performance of the powerful hardware substrate.  This challenge in essence comes from the core-to-core heterogeneity, either \emph{intentional} due to architectural innovations such as "bigLITTLE" architectures \cite{biglittle}, or \emph{unintentional} due to process variation \cite{variation_jssc02} \cite{ParameterVariations_DAC03}, aging \cite{ImpactTechnologyScaling_04} \cite{aging_iedm} \cite{degradation_05} \cite{ReviveNet}, and core salvaging \cite{redundancy_iccd} \cite{WearoutRecovery_08}, i.e. decoupling some faulty microarchitectural components for reliability reasons. Such core-to-core heterogeneity results in functionally equivalent cores with different performance levels. Intel and ARM demonstrated adaptive RISC core designs to tolerate such dynamic variations, at the expense of performance degradation \cite{adaptive-core} \cite{arm-timing-error}. In the near future, we believe that the core-level unintentional heterogeneity would be more significant, given the faulty components and aging effects would be more prevalent and prominent in smaller technology nodes \cite{degradation_05}.  We call such aging-induced performance degradation as "Sick Silicon" problem. Therefore, \emph{instead of simply ruling out those cores salvaged from various defects, we should try to hide the imperfections.}
+One of the looming challenges is core management, which directly determines the harvestable performance of the powerful hardware substrate.  This challenge in essence comes from the core-to-core heterogeneity, either \emph{intentional} due to architectural innovations such as "bigLITTLE" architectures \cite{biglittle}, or \emph{unintentional} due to process variation \cite{variation_jssc02} \cite{ParameterVariations_DAC03}, aging \cite{ImpactTechnologyScaling_04} \cite{aging_iedm} \cite{degradation_05} \cite{ReviveNet}, and core salvaging \cite{shivakumar2003exploiting} \cite{WearoutRecovery_08}, i.e. decoupling some faulty microarchitectural components for reliability reasons. Such core-to-core heterogeneity results in functionally equivalent cores with different performance levels. Intel and ARM demonstrated adaptive RISC core designs to tolerate such dynamic variations, at the expense of performance degradation \cite{tschanz201045nm} \cite{arm-timing-error}. In the near future, we believe that the core-level unintentional heterogeneity would be more significant, given the faulty components and aging effects would be more prevalent and prominent in smaller technology nodes \cite{degradation_05}.  We call such aging-induced performance degradation as "Sick Silicon" problem. Therefore, \emph{instead of simply ruling out those cores salvaged from various defects, we should try to hide the imperfections.}
 
 An obvious solution to this problem is always prioritizing the cores with the least "degradation". However, we find that it's not that intuitively simple to  quantify the degradation. First, the performance degradation depends on both applications and defect degrees, as Figure \ref{degrade} shows. The results show the performance responses of cores under various types of degradations. The cores are salvaged from instruction window defects, or L1 instruction/data cache defects, or L2 cache defects, respectively \cite{salvaging}. For simplicity, we don't show the more complicated compound defects. The degradation degree of "0" indicates defect-free, and 1/2  indicate a half resource unavailable, and so on. The results show that  performance response not only depends on degradation degrees, but also exhibits to be highly application-specific. For example, the \texttt{gobmk} in the Figure \ref{degrade} (UL) shows to be very resilient to the instruction window degradation, but, by contrast, the \texttt{leslie3d} and \texttt{GemsFDTD} are very sensitive to it. Such complexity is never unique for instruction window only, but also to other resources, as exemplified in the other three sub-figures. Hence, even though the defect and associate defect degree are accessible to operating system (OS), we still have no ways to figure out how much performance impact such degradation to the running applications. Second, the performance degradation of different phases can also change significantly, even on the same core. Hence, the degradation measured in coarse-grained application may underestimate the impact of core-to-core heterogeneity. For example, assume an application is divided into two phases, Phase 1 and Phase 2. The execution time of the two phases on Core A is 100ms and 200ms, denoted by
 
@@ -43,7 +43,7 @@ In view of the above two observations, we claim that to maximally hide the defec
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IPCDegradation.eps}\\
+    \includegraphics[width=0.65\textwidth]{IPCDegradation}\\
     \caption{Performance degradation  vs. defect degrees of inst. window  (UL), L1 inst. cache (UR), L1 data cache(LL), L2 cache(LR)}
     \label{degrade}
 \end{figure}
@@ -80,13 +80,13 @@ This section first describes our IVF evaluation algorithms for different intermi
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig4}\\
+    \includegraphics[width=0.5\textwidth]{IVF-fig4}\\
     \caption{(a) Schematic diagram of a baseline microprocessor. The two gray units are the structures under analyzing; (b) Reorder buffer entry \cite{shen2013modern}}
     \label{fig:baseline-processor}
 \end{figure}
 
 
-Fig. \ref{fig:baseline-processor}(a) shows a baseline pipeline used in this work. Reorder buffer is used for out-of-order instruction execution, which allows instructions to be committed in-order. It keeps the information of in-flight instructions and allows for precise exceptions and easy rollback for control of target address mispredictions. The entry in reorder buffer is allocated in a round-robin order. Fig. \ref{fig:baseline-processor}(b) further shows typical fields contained in an entry of reorder buffer \cite{shen2013modern}. These fields have different functions. The busy flag, issued flag, finished flag, speculative flag, and valid flag are control signals, while $PC$ denotes the address of the current instruction, and rename register shows the renamed register for the destination register of an instruction. For register file, it is an array of processor registers and will be used to provide operation data during program execution. Each register in it contains 64 bits. If any of these two structures is affected by an intermittent fault, the probability resulting in a visible error is very high.We compute IVFs for these two representative structures in this work.
+Figure \ref{fig:baseline-processor}(a) shows a baseline pipeline used in this work. Reorder buffer is used for out-of-order instruction execution, which allows instructions to be committed in-order. It keeps the information of in-flight instructions and allows for precise exceptions and easy rollback for control of target address mispredictions. The entry in reorder buffer is allocated in a round-robin order. Figure \ref{fig:baseline-processor}(b) further shows typical fields contained in an entry of reorder buffer \cite{shen2013modern}. These fields have different functions. The busy flag, issued flag, finished flag, speculative flag, and valid flag are control signals, while $PC$ denotes the address of the current instruction, and rename register shows the renamed register for the destination register of an instruction. For register file, it is an array of processor registers and will be used to provide operation data during program execution. Each register in it contains 64 bits. If any of these two structures is affected by an intermittent fault, the probability resulting in a visible error is very high.We compute IVFs for these two representative structures in this work.
 
 Before IVF computation, the following two questions should be carefully answered.
 
@@ -98,12 +98,12 @@ For the first question, to evaluate the impact of an intermittent fault on progr
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig5}\\
+    \includegraphics[width=0.5\textwidth]{IVF-fig5}\\
     \caption{Example of intermittent timing faults caused by voltage emergencies.}
     \label{fig:timing-faults}
 \end{figure}
 
-For the second question, the parameters of an intermittent fault should follow the characteristics of an actual fault. As intermittent faults may be caused by different factors, the duration of intermittent faults could vary across a wide range of timescale. To set appropriate values for these key parameters, we analyze one kind of intermittent timing faults caused by significant voltage variation. The situation when supply voltage variation across a allowed voltage threshold is called a voltage emergency \cite{joseph2003control}. Voltage emergencies will lead to timing violations by slowing logic circuits. Fig. \ref{fig:timing-faults} shows an example of intermittent timing faults caused by voltage emergencies. As can be seen, intermittent timing faults caused by voltage variations usually last on the order of several to tens of nanoseconds. Prior works also show the similar duration of an intermittent fault \cite{smolens2007detecting} \cite{gracia2008analysis} \cite{stathis2001physical}. According to the observation, we set the burst length of an intermittent fault in the range of 5 cycles to 30 cycles in our experiments. Both active time and inactive time are set to 2 cycles. The number of activations will be changed according to burst length, but the 50\% duty cycle is kept constant. For an instance, if burst length is 30-cycle, the number of activations is 8. Besides, as the appearance time of intermittent faults cannot be predicted, their start time are randomly generated during program execution.
+For the second question, the parameters of an intermittent fault should follow the characteristics of an actual fault. As intermittent faults may be caused by different factors, the duration of intermittent faults could vary across a wide range of timescale. To set appropriate values for these key parameters, we analyze one kind of intermittent timing faults caused by significant voltage variation. The situation when supply voltage variation across a allowed voltage threshold is called a voltage emergency \cite{joseph2003control}. Voltage emergencies will lead to timing violations by slowing logic circuits. Figure \ref{fig:timing-faults} shows an example of intermittent timing faults caused by voltage emergencies. As can be seen, intermittent timing faults caused by voltage variations usually last on the order of several to tens of nanoseconds. Prior works also show the similar duration of an intermittent fault \cite{smolens2007detecting} \cite{gracia2008analysis} \cite{stathis2001physical}. According to the observation, we set the burst length of an intermittent fault in the range of 5 cycles to 30 cycles in our experiments. Both active time and inactive time are set to 2 cycles. The number of activations will be changed according to burst length, but the 50\% duty cycle is kept constant. For an instance, if burst length is 30-cycle, the number of activations is 8. Besides, as the appearance time of intermittent faults cannot be predicted, their start time are randomly generated during program execution.
 
 Based on the above analysis, the first step for IVF computing is to determine ACE bits in a structure during program execution; the second step is to check whether ACE bits are changed when an intermittent fault occurs. As reorder buffer is used to support out-of-order instruction execution, we analyze ACE bits in it by monitoring instructions when these instructions go through all stages of the pipeline. Meanwhile, register file is used to store and provide operation data for in-flight instructions, we analyze ACE bits in it based on its related operations, such as read, write, and evict. Following we present IVF computation algorithms for intermittent stuck-at faults, intermittent open and short faults, and intermittent timing faults, respectively.
 
@@ -112,24 +112,24 @@ Intermittent stuck-at faults include intermittent stuck-at-1 faults and intermit
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig6}\\
+    \includegraphics[width=0.6\textwidth]{IVF-fig6}\\
     \caption{ACE bits and un-ACE bits projection for IVF computing.}
     \label{fig:ACEbits}
 \end{figure}
 
-1) Reorder Buffer: We illustrate the IVF computation algorithm for reorder buffer at first. Unlike a soft error only existing for a single cycle, an intermittent fault will last for a while and repeatedly appear during its lifetime. Fig. \ref{fig:ACEbits} shows a 3-D perspective of a simplified reorder buffer. The X-axis represents the number of entries in the structure, the Y-axis represents the number of bits in each entry, and the Z-axis represents the time of program execution. For the example structure, it has two entries and each entry contains two bits. The small black parallelograms and white parallelograms are used to indicate ACE bits and un-ACE bit, respectively. For this example, we assume an intermittent stuck-at-1 fault occurs. The burst length is set to 2 cycles, while both active time and inactive time are 1 cycle.
+1) Reorder Buffer: We illustrate the IVF computation algorithm for reorder buffer at first. Unlike a soft error only existing for a single cycle, an intermittent fault will last for a while and repeatedly appear during its lifetime. Figure \ref{fig:ACEbits} shows a 3-D perspective of a simplified reorder buffer. The X-axis represents the number of entries in the structure, the Y-axis represents the number of bits in each entry, and the Z-axis represents the time of program execution. For the example structure, it has two entries and each entry contains two bits. The small black parallelograms and white parallelograms are used to indicate ACE bits and un-ACE bit, respectively. For this example, we assume an intermittent stuck-at-1 fault occurs. The burst length is set to 2 cycles, while both active time and inactive time are 1 cycle.
 
-The gray part of the cube shows the possible affected region by the fault. The parallelograms in the X-Y plane are planar representation of ACE bits and un-ACE bits for the gray part. For a specific bit, if it contains an ACE bit during the fault’s active time and its value is changed by the fault, the projection of that bit in X-Y plane is an ACE bit, otherwise, the projection will be an un-ACE bit. As can be seen in Fig. \ref{fig:ACEbits}, during the fault’s active time, $B_1$ and $B_2$ contain ACE bits and will be affected by the fault. Though $B_1$ and $B_3$ contain ACE bits in the fault’s inactive time, they will not be affected by the fault. To generate bit projection, we further need to analyze whether the values in and will be changed. For the intermittent stuck-at-1 fault, only if an ACE bit is supposed to be a logic value “0”, it will actually be corrupted. Fig. \ref{fig:ACEbits} shows the values of $B_1$ and $B_2$ during the active time. As the fault in-question is an intermittent stuck-at-1 fault, only the projection of $B_1$ is an ACE bit and other three bits are un-ACE bits. In this case, the probability that the fault leads to an external visible error is 25\%, which means the IVF is 25\%. With the above ACE bit analysis and bit projection, we can quickly determine whether an intermittent stuck-at fault affects program execution and further compute IVF for reorder buffer.
+The gray part of the cube shows the possible affected region by the fault. The parallelograms in the X-Y plane are planar representation of ACE bits and un-ACE bits for the gray part. For a specific bit, if it contains an ACE bit during the fault’s active time and its value is changed by the fault, the projection of that bit in X-Y plane is an ACE bit, otherwise, the projection will be an un-ACE bit. As can be seen in Figure \ref{fig:ACEbits}, during the fault’s active time, $B_1$ and $B_2$ contain ACE bits and will be affected by the fault. Though $B_1$ and $B_3$ contain ACE bits in the fault’s inactive time, they will not be affected by the fault. To generate bit projection, we further need to analyze whether the values in and will be changed. For the intermittent stuck-at-1 fault, only if an ACE bit is supposed to be a logic value “0”, it will actually be corrupted. Figure \ref{fig:ACEbits} shows the values of $B_1$ and $B_2$ during the active time. As the fault in-question is an intermittent stuck-at-1 fault, only the projection of $B_1$ is an ACE bit and other three bits are un-ACE bits. In this case, the probability that the fault leads to an external visible error is 25\%, which means the IVF is 25\%. With the above ACE bit analysis and bit projection, we can quickly determine whether an intermittent stuck-at fault affects program execution and further compute IVF for reorder buffer.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig7}\\
+    \includegraphics[width=0.6\textwidth]{IVF-fig7}\\
     \caption{Lifetime of a register version with related operations. $F_1$, $F_2$, and $F_3$ are three intermittent stuck-at faults occurring at different time.}
     \label{fig:register-lifetime}
 \end{figure}
 
 
-2) Register File: Unlike reorder buffer, the ACE bits analysis for register file is a little different. The ACE bits in register file are analyzed according to the related operations on each physical register. During the execution of a program, if the microprocessor decodes an in-flight instruction with a destination register, it will allocate a free physical register for the instruction, creating a new register version \cite{montesinos2007using}. The lifetime of a register version is shown in Fig. \ref{fig:register-lifetime}. During the lifetime of a register version, the possible operations include allocation ($A$), write ($W$), read ($R$), and deallocation ($D$). A register version can only be written once but can be read several times during its lifetime. The lifetime of a register version is from allocation to deallocation and can be divided into three intervals: from allocation to write ($A$ to $W$), from write to the last read ($W$ to $R_n$), and from the last read to deallocation ($R_n$ to $D$). Only the interval from write to the last read is critical time and other two intervals belong to noncritical time. During the critical time, all bits in the register are ACE bits.
+2) Register File: Unlike reorder buffer, the ACE bits analysis for register file is a little different. The ACE bits in register file are analyzed according to the related operations on each physical register. During the execution of a program, if the microprocessor decodes an in-flight instruction with a destination register, it will allocate a free physical register for the instruction, creating a new register version \cite{Using_Register_Lifetime_dsn07}. The lifetime of a register version is shown in Figure \ref{fig:register-lifetime}. During the lifetime of a register version, the possible operations include allocation ($A$), write ($W$), read ($R$), and deallocation ($D$). A register version can only be written once but can be read several times during its lifetime. The lifetime of a register version is from allocation to deallocation and can be divided into three intervals: from allocation to write ($A$ to $W$), from write to the last read ($W$ to $R_n$), and from the last read to deallocation ($R_n$ to $D$). Only the interval from write to the last read is critical time and other two intervals belong to noncritical time. During the critical time, all bits in the register are ACE bits.
 
 If an intermittent stuck-at-1 fault occurs during the critical time, these ACE bits with logic value “0” will be affected and lead to an external visible error (like fault $F_1$). If the fault occurs during noncritical time, it will always be masked (like fault $F_3$). A complicated situation is that a fault may start from a critical time region and end at a noncritical time region (like fault $F_2$). For this kind of fault, if its residency time in critical time region overlaps its active time, the fault can be handled like $F_1$; if there is no overlap, the fault will be masked. Only when an intermittent stuck-at-1 fault occurs during critical time and changes ACE bits will affect program execution. With the above analysis, the IVF for reorder buffer and register file considering intermittent stuck-at faults can be expressed as Equation. \ref{eq:IVF-SA} where $B$ represents the total number of bits in the structure under analysis, $s$ represents a location in the structure, $D$ represents the burst length of an intermittent stuck-at fault, and $U_{ACE}^D(s)$ represents whether an ACE bit in location will be changed by the fault; if it is, the value is assigned to one; otherwise, the value is assigned to zero. The numerator adds the total number of ACE bits that will be affected during the lifetime of an intermittent stuck-at fault.
 
@@ -142,15 +142,15 @@ Intermittent open and short faults have different behaviors depending on where t
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig8}\\
+    \includegraphics[width=0.5\textwidth]{IVF-fig8}\\
     \caption{Intermittent dominant-AND and dominant-OR bridging faults (a) in reorder buffer and (b) in register file.}
     \label{fig:IM-AND-OR}
 \end{figure}
 
 
-Fig. \ref{fig:IM-AND-OR}(a) and (b) show intermittent dominant-AND and dominant-OR bridging faults in the metal interconnect wires to reorder buffer and register file, respectively. and are aggressor wires, while and are victim wires. The logic value of the victim wire is dominated by the AND operation or OR operation of the logic value of the aggressor wire and its own value. For intermittent dominant-AND and dominant-OR faults, their controlling values are logic value “0” and logic value “1”, respectively. These two kinds of faults also have similar analysis methods, for the sake of brevity, we only take dominant-AND bridging faults as an example. The intermittent open and short faults refer to intermittent dominant-AND bridging faults if not specifically mentioned in the following analysis. When an intermittent dominant-AND bridging fault occurs, the value of the victim wire will be changed only when the victim wire has a logic value “1” and the aggressor wire has a logic value “0”. The corrupted data of the victim wire then propagates during program execution. If the corrupt data propagates to a storage cell, we further need to determine whether the affected bit is an ACE bit or not. If it is an ACE bit, then the fault will result in an external visible error; otherwise, the fault is said to be masked. 
+Figure \ref{fig:IM-AND-OR}(a) and (b) show intermittent dominant-AND and dominant-OR bridging faults in the metal interconnect wires to reorder buffer and register file, respectively. and are aggressor wires, while and are victim wires. The logic value of the victim wire is dominated by the AND operation or OR operation of the logic value of the aggressor wire and its own value. For intermittent dominant-AND and dominant-OR faults, their controlling values are logic value “0” and logic value “1”, respectively. These two kinds of faults also have similar analysis methods, for the sake of brevity, we only take dominant-AND bridging faults as an example. The intermittent open and short faults refer to intermittent dominant-AND bridging faults if not specifically mentioned in the following analysis. When an intermittent dominant-AND bridging fault occurs, the value of the victim wire will be changed only when the victim wire has a logic value “1” and the aggressor wire has a logic value “0”. The corrupted data of the victim wire then propagates during program execution. If the corrupt data propagates to a storage cell, we further need to determine whether the affected bit is an ACE bit or not. If it is an ACE bit, then the fault will result in an external visible error; otherwise, the fault is said to be masked. 
 
-To compute IVFs of reorder buffer and register file for intermittent dominant bridging faults, we also need to analyze the data fields in them. As can be seen in Fig. \ref{fig:IM-AND-OR}(a), if the control bit in a reorder buffer entry has been corrupted, the instruction will be in a wrong state, and may lead to a fatal error. If the destination register tag is affected, the instruction result will be written to a wrong register. The bits in a register [shown in Fig. \ref{fig:IM-AND-OR}(b)], however, make no difference to the data if been affected, there is no need to further differentiate them.We only check the value containing in two adjacent lines and determine whether the fault changes ACE bits in that register. 
+To compute IVFs of reorder buffer and register file for intermittent dominant bridging faults, we also need to analyze the data fields in them. As can be seen in Figure \ref{fig:IM-AND-OR}(a), if the control bit in a reorder buffer entry has been corrupted, the instruction will be in a wrong state, and may lead to a fatal error. If the destination register tag is affected, the instruction result will be written to a wrong register. The bits in a register [shown in Figure \ref{fig:IM-AND-OR}(b)], however, make no difference to the data if been affected, there is no need to further differentiate them.We only check the value containing in two adjacent lines and determine whether the fault changes ACE bits in that register. 
 
 With the above analysis, the IVF for reorder buffer and register file considering intermittent dominant bridging faults can be expressed as Equation \ref{eq:IVF-BF} where $NUM$ represents the total number of intermittent dominant bridging faults, $P_{ACE}^{e}$ represents whether a fault $e$ propagates to reorder buffer or register file and finally affects ACE bits. If true, $P_{ACE}^{e}$ will set to one. Otherwise, $P_{ACE}^{e}$ will set to zero and the fault is said to be masked.
 
@@ -163,12 +163,12 @@ Unlike intermittent stuck-at faults which transform the correct value to a const
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig9}\\
+    \includegraphics[width=0.5\textwidth]{IVF-fig9}\\
     \caption{Intermittent timing fault results in writing a wrong data to a storage cell.}
     \label{fig:IM-timing-fault}
 \end{figure}
 
-Before presenting the algorithm to compute IVF for intermittent timing faults, we need to know when a fault will affect program execution. To determine the impact of an intermittent timing fault, two steps are needed. First, analyze whether the fault is captured by a storage cell; second, check whether ACE bits in the storage cell have been affected. Only when an intermittent timing fault propagates to storage cells and changes ACE bits, it will affect the final program output. Otherwise, the fault will not manifest itself in external output and is said to be masked. In this work, we assume an intermittent timing fault only cause timing violations during its active time. If a write operation occurs during the active time of an intermittent timing fault, we assume the fault propagates to the structure. If no write operations occur or write operations only occur during inactive time, the fault is said to be masked and will not affect program execution. We use an example to further explain for this. Fig. \ref{fig:IM-timing-fault} illustrates whether an intermittent timing fault will lead to capture a wrong data to a storage cell. As can be seen, write operation $W_1$ occurs during the active time of $Fault_1$, the fault will propagate to a storage cell. While write operation $W_2$ occurs during the inactive time of $Fault_2$, the fault will not affect the data propagation.
+Before presenting the algorithm to compute IVF for intermittent timing faults, we need to know when a fault will affect program execution. To determine the impact of an intermittent timing fault, two steps are needed. First, analyze whether the fault is captured by a storage cell; second, check whether ACE bits in the storage cell have been affected. Only when an intermittent timing fault propagates to storage cells and changes ACE bits, it will affect the final program output. Otherwise, the fault will not manifest itself in external output and is said to be masked. In this work, we assume an intermittent timing fault only cause timing violations during its active time. If a write operation occurs during the active time of an intermittent timing fault, we assume the fault propagates to the structure. If no write operations occur or write operations only occur during inactive time, the fault is said to be masked and will not affect program execution. We use an example to further explain for this. Figure \ref{fig:IM-timing-fault} illustrates whether an intermittent timing fault will lead to capture a wrong data to a storage cell. As can be seen, write operation $W_1$ occurs during the active time of $Fault_1$, the fault will propagate to a storage cell. While write operation $W_2$ occurs during the inactive time of $Fault_2$, the fault will not affect the data propagation.
 
 With the above analysis, the frequency of write operations has strong correlation with the vulnerability of a structure to intermittent timing faults. During the lifetime of an intermittent timing fault, a structure with high write frequency is more vulnerable because the probability a fault propagating to the structure is very high. On the contrary, a structure with low write frequency is less vulnerable. To compute the IVF for different structures, we then need to determine whether a write operation is taken during the active time of an intermittent timing fault. For reorder buffer, the related write operations occur when the state of an instruction in it changes. For register file, the related write operations take place when an instruction commits or when a value is loaded from memory. The related write operations will be recorded for IVF computation during program execution.
 
@@ -187,12 +187,13 @@ With the above introduced (5)–(7), we can quickly compute IVFs for reorder buf
 
 \subsection{Experiment Result Analysis}
 \subsubsection{Experiment Setups}
-All of our experiments are conducted on the Sim-Alpha simulator \cite{desikan2001sim}. Sim-Alpha is a validated execution-driven simu-lator for Alpha 21264 microprocessor \cite{skessler1999alpha}. It can execute instructions down the mis-speculated path, in the same way as an actual microprocessor would execute them. In this work, Sim-Alpha is heavily modified to support IVF computing for reorder buffer and register file. We use all the twelve SPEC CPU2000 integer benchmarks to evaluate our method. Since the simulator cannot accurately simulate the floating-point pipeline, the floating-point benchmarks are not included in our experiments. All the benchmarks are compiled for the Alpha ISA. In order to reduce simulation time, we use Simpoint tool \cite{sherwood2002automatically} to pick the most representative simulation point for each benchmark and each benchmark is fast-forwarded to its representative point before detailed performance simulation takes place. Each benchmark is evaluated for 100 million instructions using the full reference input set. The baseline configuration of the simulator is further summarized in Table \ref{tab:sim-config}. As we focus on the integer pipeline, only the integer pipeline resources are shown in the table. Besides, to analyze the impact of different microarchitecture design parameters on IVF computation, we further change the number of fetch/slot/issue width, commit width, reorder buffer size, and register file size in our experiments.
+All of our experiments are conducted on the Sim-Alpha simulator \cite{desikan2001sim}. Sim-Alpha is a validated execution-driven simu-lator for Alpha 21264 microprocessor \cite{kessler1999alpha}. It can execute instructions down the mis-speculated path, in the same way as an actual microprocessor would execute them. In this work, Sim-Alpha is heavily modified to support IVF computing for reorder buffer and register file. We use all the twelve SPEC CPU2000 integer benchmarks to evaluate our method. Since the simulator cannot accurately simulate the floating-point pipeline, the floating-point benchmarks are not included in our experiments. All the benchmarks are compiled for the Alpha ISA. In order to reduce simulation time, we use Simpoint tool \cite{sherwood2002automatically} to pick the most representative simulation point for each benchmark and each benchmark is fast-forwarded to its representative point before detailed performance simulation takes place. Each benchmark is evaluated for 100 million instructions using the full reference input set. The baseline configuration of the simulator is further summarized in Table \ref{tab:sim-config}. As we focus on the integer pipeline, only the integer pipeline resources are shown in the table. Besides, to analyze the impact of different microarchitecture design parameters on IVF computation, we further change the number of fetch/slot/issue width, commit width, reorder buffer size, and register file size in our experiments.
 
 \begin{table} 
     \centering
     \caption{Simulated Microprocessor Configuration}
-    \begin{tabular}{@{}l|l@{}}
+    \setlength{\tabcolsep}{4mm}
+    \begin{tabular}{@{}lc@{}}
         \toprule
         Configuration Parameter & Value \\ \midrule
         Pipeline Stages & 7 \\
@@ -203,7 +204,7 @@ All of our experiments are conducted on the Sim-Alpha simulator \cite{desikan200
         Reorder Buffer Size & 80 entries \\
         Unified Load/Store Queue Size & 64 entries \\
         Integer ALUs & 4, 1-cycle latency \\
-        Integer Multipliers/Dividers &  \\
+        Integer Multipliers/Dividers &  - \\
         L1 Data Cache & 64KB, 2-way, 64 byte line-size, 1-cycle latency \\
         L1 Instruction Cache & 64KB, 2-way, 64 byte line-size, 3-cycle latency \\
         L2 Unified Cache & 2MB, direct mapped, 64 byte line-size, 7-cycle latency \\
@@ -232,9 +233,9 @@ we first present IVF of reorder buffer and register file considering different i
 
 1) Intermittent Stuck-at Faults: For intermittent stuck-at faults, as the value of ACE bits will affect IVF evaluation, we compute $IVF_{sa1}$ in terms of intermittent stuck-at-1 fault model and $IVF_{sa0}$ in terms of intermittent stuck-at-0 fault model, respectively.
 
-Fig. \ref{fig:AVF-sa1} and Fig. \ref{fig:AVF-sa0} show $IVF_{sa1}$ and $IVF_{sa0}$ for reorder buffer and register file during executing different benchmarks. The average $IVF_{sa1}$ for reorder buffer and register file vary from 21\%  to 37\% and from 21.4\% to 31.5\%, respectively. The average $IVF_{sa0}$, however, vary from 5.8\% to 10.3\% and from 1.1\% to 1.6\%, respectively. As can be seen, the longer burst length, the more ACE bits been affected, which leads to a higher $IVF_{sa1}$ and $IVF_{sa0}$. For a same burst length, the average $IVF_{sa1}$ is much higher than $IVF_{sa0}$. This is because during executing different benchmarks, the number of ACE bits containing logic value “0” is much more than these containing logic value “1”, especially in register file. ACE bits with logic value “0’ are vulnerable to intermittent stuck-at-1 faults, but not to intermittent stuck-at-0 faults. Meanwhile, both $IVF_{sa1}$ and $IVF_{sa0}$ of reorder buffer are much higher than that of register file. The reason is that the residency time of an instruction in reorder buffer is very long, from issue stage till commit stage. Register file, however, will be written very frequently, making its vulnerable time much shorter than that of reorder buffer.
+Figure \ref{fig:AVF-sa1} and Figure \ref{fig:AVF-sa0} show $IVF_{sa1}$ and $IVF_{sa0}$ for reorder buffer and register file during executing different benchmarks. The average $IVF_{sa1}$ for reorder buffer and register file vary from 21\%  to 37\% and from 21.4\% to 31.5\%, respectively. The average $IVF_{sa0}$, however, vary from 5.8\% to 10.3\% and from 1.1\% to 1.6\%, respectively. As can be seen, the longer burst length, the more ACE bits been affected, which leads to a higher $IVF_{sa1}$ and $IVF_{sa0}$. For a same burst length, the average $IVF_{sa1}$ is much higher than $IVF_{sa0}$. This is because during executing different benchmarks, the number of ACE bits containing logic value “0” is much more than these containing logic value “1”, especially in register file. ACE bits with logic value “0’ are vulnerable to intermittent stuck-at-1 faults, but not to intermittent stuck-at-0 faults. Meanwhile, both $IVF_{sa1}$ and $IVF_{sa0}$ of reorder buffer are much higher than that of register file. The reason is that the residency time of an instruction in reorder buffer is very long, from issue stage till commit stage. Register file, however, will be written very frequently, making its vulnerable time much shorter than that of reorder buffer.
 
-We also present the AVFs of reorder buffer and register file considering soft errors in Fig. \ref{fig:AVF-sa1}. Compared to $IVF_{sa1}$, their AVFs are much lower. As an intermittent stuck-at-1 fault has longer duration than soft errors and most ACE bits contain logic value “0” in the two structures, which makes the probability an intermittent stuck-at-1 fault affecting final program execution is much higher. Therefore, intermittent stuck-at-1 faults have much more serious impact on program execution than soft errors if occur. The situation for intermittent stuck-at-0 faults, however, is just on the contrary. The reason is that soft errors can flip all the ACE bits while intermittent stuck-at-0 faults only affect these ACE bits with logic value “1”. 
+We also present the AVFs of reorder buffer and register file considering soft errors in Figure \ref{fig:AVF-sa1}. Compared to $IVF_{sa1}$, their AVFs are much lower. As an intermittent stuck-at-1 fault has longer duration than soft errors and most ACE bits contain logic value “0” in the two structures, which makes the probability an intermittent stuck-at-1 fault affecting final program execution is much higher. Therefore, intermittent stuck-at-1 faults have much more serious impact on program execution than soft errors if occur. The situation for intermittent stuck-at-0 faults, however, is just on the contrary. The reason is that soft errors can flip all the ACE bits while intermittent stuck-at-0 faults only affect these ACE bits with logic value “1”. 
 
 \begin{figure}[t]
     \centering
@@ -243,7 +244,7 @@ We also present the AVFs of reorder buffer and register file considering soft er
     \label{fig:IVF-and}
 \end{figure}
 
-2) Intermittent Open and Short Faults: Fig. \ref{fig:IVF-and} shows $IVF_{bf}$ for reorder buffer and register file considering intermittent dominant-AND bridging faults. As can be seen, for different burst length, the average $IVF_{bf}$ for reorder buffer and register file vary from 14.8\% to 23\% and from 11.5\% to 22.8\%, respectively. These two structures have relatively low vulnerability to inter-mittent dominant bridging faults. When an intermittent dominant bridging fault occurs, only the case that the aggressor wire holds a controlling value and the victim wire holds a non-controlling value, the fault can propagate during program execution. With the same burst length, reorder buffer has a little higher than that for register file. The explanation is as follows: for reorder buffer, the control bits are more sensitive to intermittent dominant bridging faults; while for register file, however, it contains many narrowvalues during program execution. A value is categorized as narrow only if its leading bits are all zeros or ones. Kumar et al. \cite{kumar2006reducing} show about 50\% of the produced results could be categorized as narrow values. For the narrow values in register file, they have higher masking rates to intermittent dominant bridging faults, which results in a lower $IVF_{bf}$.
+2) Intermittent Open and Short Faults: Figure \ref{fig:IVF-and} shows $IVF_{bf}$ for reorder buffer and register file considering intermittent dominant-AND bridging faults. As can be seen, for different burst length, the average $IVF_{bf}$ for reorder buffer and register file vary from 14.8\% to 23\% and from 11.5\% to 22.8\%, respectively. These two structures have relatively low vulnerability to inter-mittent dominant bridging faults. When an intermittent dominant bridging fault occurs, only the case that the aggressor wire holds a controlling value and the victim wire holds a non-controlling value, the fault can propagate during program execution. With the same burst length, reorder buffer has a little higher than that for register file. The explanation is as follows: for reorder buffer, the control bits are more sensitive to intermittent dominant bridging faults; while for register file, however, it contains many narrowvalues during program execution. A value is categorized as narrow only if its leading bits are all zeros or ones. Kumar et al. \cite{kumar2006reducing} show about 50\% of the produced results could be categorized as narrow values. For the narrow values in register file, they have higher masking rates to intermittent dominant bridging faults, which results in a lower $IVF_{bf}$.
 
 \begin{figure}[t]
     \centering
@@ -253,9 +254,9 @@ We also present the AVFs of reorder buffer and register file considering soft er
 \end{figure}
 
 
-3) Intermittent Timing Faults: We further present $IVF_{tf}$ results for reorder buffer and register file considering intermittent timing faults. Fig. \ref{fig:IVF-tf} shows the $IVF_{tf}$ for reorder buffer and register file during executing different benchmarks. As can be seen, the average $IVF_{tf}$ for reorder buffer and register file are from 15.8\% to 23.7\% and from 19.7\% to 30.6\%, respectively. The longer burst length, the more write operations will be affected, which leads to higher $IVF_{tf}$ results. From Fig. \ref{fig:IVF-tf}, we can tell that the average $IVF_{tf}$ of register file is a little higher than that of reorder buffer, this is because register file provides operands for each instruction and has higher write frequency than reorder buffer. There is also a notable exception during executing two benchmarks gap and gzip. As for these two benchmarks, they have much higher cache miss rates than other benchmarks. During the time a cache miss occurs, the write operation for reorder buffer and register file will reduce dramatically, which leads to a much lower $IVF_{tf}$ at that time. The widely used method to tolerate timing violations is to set a wider timing margin \cite{annavaram2007implications}. Only the intermittent timing faults occurring at critical paths and resulting in timing margin violation are what need to be considered.
+3) Intermittent Timing Faults: We further present $IVF_{tf}$ results for reorder buffer and register file considering intermittent timing faults. Figure \ref{fig:IVF-tf} shows the $IVF_{tf}$ for reorder buffer and register file during executing different benchmarks. As can be seen, the average $IVF_{tf}$ for reorder buffer and register file are from 15.8\% to 23.7\% and from 19.7\% to 30.6\%, respectively. The longer burst length, the more write operations will be affected, which leads to higher $IVF_{tf}$ results. From Figure \ref{fig:IVF-tf}, we can tell that the average $IVF_{tf}$ of register file is a little higher than that of reorder buffer, this is because register file provides operands for each instruction and has higher write frequency than reorder buffer. There is also a notable exception during executing two benchmarks gap and gzip. As for these two benchmarks, they have much higher cache miss rates than other benchmarks. During the time a cache miss occurs, the write operation for reorder buffer and register file will reduce dramatically, which leads to a much lower $IVF_{tf}$ at that time. The widely used method to tolerate timing violations is to set a wider timing margin \cite{annavaram2007implications}. Only the intermittent timing faults occurring at critical paths and resulting in timing margin violation are what need to be considered.
 
-4) Comparisons: Figs. \ref{fig:AVF-sa1}, Fig. \ref{fig:IVF-and}, and Fig. \ref{fig:IVF-tf} have shown IVFs of reorder buffer and register file for three intermittent fault models. We then give a comparison of the impact of these faults. From these figures, it is easy to tell that intermittent stuck-at-1 faults have most serious impact on program execution during executing most benchmarks. For all these fault models, when the burst length of an intermittent fault increases, the probability to cause external errors is also increase, which means a structure’s IVF will increase. Besides, for a same fault model, the IVFs of reorder buffer and register file also vary significantly. Reorder buffer is more sensitive than register file to intermittent stuck-at faults and intermittent open and short faults, while less sensitive to intermittent timing faults. Utilizing the proposed IVF evaluation methodology, designers can quantitatively analyze the masking effect of intermittent faults and guide system reliability design during the early design stage.
+4) Comparisons: Figs. \ref{fig:AVF-sa1}, Figure \ref{fig:IVF-and}, and Figure \ref{fig:IVF-tf} have shown IVFs of reorder buffer and register file for three intermittent fault models. We then give a comparison of the impact of these faults. From these figures, it is easy to tell that intermittent stuck-at-1 faults have most serious impact on program execution during executing most benchmarks. For all these fault models, when the burst length of an intermittent fault increases, the probability to cause external errors is also increase, which means a structure’s IVF will increase. Besides, for a same fault model, the IVFs of reorder buffer and register file also vary significantly. Reorder buffer is more sensitive than register file to intermittent stuck-at faults and intermittent open and short faults, while less sensitive to intermittent timing faults. Utilizing the proposed IVF evaluation methodology, designers can quantitatively analyze the masking effect of intermittent faults and guide system reliability design during the early design stage.
 
 In this work, we focus on the impact of intermittent faults, while Pellegrini et al.’s work CrashTest \cite{pellegrini2008crashtest} analyzes the impact of hard faults and soft errors on program execution. Their experimental results shows that about 80\% of stuck-at faults will cause errors, while only 40\% of path-delay faults have adverse effects on program execution. Soft errors have the least impact on the correct functionally of the design and on average less than 10\% of them cause an error. Comparing their results with our experimental results, it is easy to knowthat hard faults have most serious impact on program execution, followed by intermittent faults, and finally soft errors. Pellegrini et al.’s work combined with our work provides a global reliability picture for designers to understand the impact of different kinds of faults on program execution.
 
@@ -263,24 +264,31 @@ In this work, we focus on the impact of intermittent faults, while Pellegrini et
 We have computed IVF for different intermittent fault models under a specified microprocessor configuration. In this subsection, we further extend our proposed methodology to address different microprocessor configurations. We choose four microarchitecture design parameters (fetch/slot/issue width, commit width, reorder buffer size, and register file size) which are believed to have impact on IVF computation. We change the size of these parameters to generate different microprocessor configurations. Table \ref{tab:ROB-config} and Table \ref{tab:RF-config} show four different microprocessor configurations for reorder buffer and register file, respectively. Of these configurations, rob\_base and reg\_base are the baseline configurations. We compute reorder buffer’s and register file’s IVF for each configuration shown in Table \ref{tab:ROB-config} and Table \ref{tab:RF-config}. Burst length is set to 10 cycles in the following experiments.
 
 \begin{table}
+    \centering
+    \setlength{\tabcolsep}{3mm}
     \caption{Different Microprocessor Configurations for Computing IVF of Reorder Buffer}
-    \begin{tabular}{c|cccc}
-        \hline
-        & Fetch/Slot/Issue Width & Commit Width & Reorder Buffer Size & Simulated Workloads   \\ \hline
-        rob\_base & 4 & 11 & 80 & \multirow{4}{*}{All twelve SPEC CPU2000 integer benchmarks} \\
-        rob\_c1 & 4 & 11 & 40 & \\
-        rob\_c2 & 4 & 11 & 120 & \\
-        rob\_c3 & 2 & 5 & 80 & \\ \hline
-    \end{tabular}
+    \begin{tabular}{@{}lcccc}
+        \toprule
+                  & \begin{tabular}[c]{@{}c@{}}Fetch/Slot/Issue \\ Width\end{tabular} & \begin{tabular}[c]{@{}c@{}}Commit \\ Width\end{tabular} & \begin{tabular}[c]{@{}c@{}}Reorder Buffer\\  Size\end{tabular} & \begin{tabular}[c]{@{}c@{}}Simulated \\ Workloads\end{tabular}                                                                                       \\ 
+                  \midrule
+        rob\_base & 4                                                                 & 11                                                      & 80                                                             & \multirow{4}{*}{\begin{tabular}[c]{@{}c@{}}All twelve \\ SPEC CPU2000 \\ integer benchmarks\end{tabular}} \\
+        rob\_c1   & 4                                                                 & 11                                                      & 40                                                             &                                                                                                           \\
+        rob\_c2   & 4                                                                 & 11                                                      & 120                                                            &                                                                                                           \\
+        rob\_c3   & 2                                                                 & 5                                                       & 80                                                             &                                                                                                           \\ 
+        \bottomrule
+        \end{tabular}
     \label{tab:ROB-config}
 \end{table}
 
 \begin{table}
+  \centering
+  \setlength{\tabcolsep}{3mm}
     \caption{Different Microprocessor Configurations for Computing IVF of Register File}
-    \begin{tabular}{c|cccc}
-        \hline
-         & Fetch/Slot/Issue Width & Commit Width & Register File Size & Simulated Workloads \\ \hline
-         reg\_base & 4 & 11 & 80 & \multirow{4}{*}{All twelve SPEC CPU2000 integer benchmarks} \\
+    \begin{tabular}{@{}lcccc}
+        \toprule
+                  & \begin{tabular}[c]{@{}c@{}}Fetch/Slot/Issue \\ Width\end{tabular} & \begin{tabular}[c]{@{}c@{}}Commit \\ Width\end{tabular} & \begin{tabular}[c]{@{}c@{}}Reorder Buffer\\  Size\end{tabular} & \begin{tabular}[c]{@{}c@{}}Simulated \\ Workloads\end{tabular}                                                                                        \\ 
+                  \midrule
+         reg\_base & 4 & 11 & 80 & \multirow{4}{*}{\begin{tabular}[c]{@{}c@{}}All twelve \\ SPEC CPU2000 \\ integer benchmarks\end{tabular}} \\
          reg\_c1 & 4 & 11 & 60 &  \\
          reg\_c2 & 4 & 11 & 120 & \\
          reg\_c3 & 2 & 5 & 80 & \\ \hline
@@ -289,18 +297,18 @@ We have computed IVF for different intermittent fault models under a specified m
 \end{table}
 
 
-Fig. \ref{fig:ROB-IVF-base}, Fig. \ref{fig:ROB-IVF-C1}, Fig. \ref{fig:ROB-IVF-C2}, and Fig. \ref{fig:ROB-IVF-C3} present our computed IVF results for different intermittent fault models. Each figure represents the result for one configuration. As can be seen, for configurations rob\_c1 and reg\_c1, reorder buffer’s and register file’s IVFs are much higher than the results of the baseline configuration. That is because when reduce a structure’s size, its occupancy increases greatly and the structure will be more vulnerable to intermittent faults. For configurations rob\_c2 and reg\_c2, on the contrary, the occupancy of a structure will reduce, which results in IVF reduction. While for configurations rob\_c3 and reg\_c3, though we reduce instruction fetch width and commit width, their IVFs also decrease significantly. This is due to both the number of in-flight instructions and the number of ACE bits in the pipeline reduces sharply during program execution. The experimental results reflect that a structure’s IVF varies across different microprocessor configurations and has high correlation with its size and the number of in-flight instructions. Besides, we can tell that intermittent stuck-at-1 faults have most serious impact while intermittent stuck-at-0 faults have minimal impact on program execution for most benchmarks. Our proposed IVF evaluation methodology can be easily extended to evaluate IVF for different microprocessor configurations and can be used to choose appropriate microarchitecture parameters during the early design stage.
+Figure \ref{fig:ROB-IVF-base}, Figure \ref{fig:ROB-IVF-C1}, Figure \ref{fig:ROB-IVF-C2}, and Figure \ref{fig:ROB-IVF-C3} present our computed IVF results for different intermittent fault models. Each figure represents the result for one configuration. As can be seen, for configurations rob\_c1 and reg\_c1, reorder buffer’s and register file’s IVFs are much higher than the results of the baseline configuration. That is because when reduce a structure’s size, its occupancy increases greatly and the structure will be more vulnerable to intermittent faults. For configurations rob\_c2 and reg\_c2, on the contrary, the occupancy of a structure will reduce, which results in IVF reduction. While for configurations rob\_c3 and reg\_c3, though we reduce instruction fetch width and commit width, their IVFs also decrease significantly. This is due to both the number of in-flight instructions and the number of ACE bits in the pipeline reduces sharply during program execution. The experimental results reflect that a structure’s IVF varies across different microprocessor configurations and has high correlation with its size and the number of in-flight instructions. Besides, we can tell that intermittent stuck-at-1 faults have most serious impact while intermittent stuck-at-0 faults have minimal impact on program execution for most benchmarks. Our proposed IVF evaluation methodology can be easily extended to evaluate IVF for different microprocessor configurations and can be used to choose appropriate microarchitecture parameters during the early design stage.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.95\textwidth]{IVF-fig14}\\
+    \includegraphics[width=1\textwidth]{IVF-fig14}\\
     \caption{Reorder buffer's IVF on configuration rob\_base (left) and register file's IVF on configuration reg\_base (right).}
     \label{fig:ROB-IVF-base}
 \end{figure}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.95\textwidth]{IVF-fig15}\\
+    \includegraphics[width=1\textwidth]{IVF-fig15}\\
     \caption{Reorder buffer's IVF on configuration rob\_c1(left) and register file's IVF on configuration reg\_c1(right).}
     \label{fig:ROB-IVF-C1}
 \end{figure}
@@ -308,30 +316,30 @@ Fig. \ref{fig:ROB-IVF-base}, Fig. \ref{fig:ROB-IVF-C1}, Fig. \ref{fig:ROB-IVF-C2
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.95\textwidth]{IVF-fig16}\\
+    \includegraphics[width=1\textwidth]{IVF-fig16}\\
     \caption{Reorder buffer's IVF on configuration rob\_c2 (left) and register file's IVF on configuration reg\_c2 (right).}
     \label{fig:ROB-IVF-C2}
 \end{figure}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.95\textwidth]{IVF-fig17}\\
+    \includegraphics[width=1\textwidth]{IVF-fig17}\\
     \caption{Reorder buffer's IVF on configuration rob\_c3 (left) and register file's IVF on configuration reg\_c3(right).}
     \label{fig:ROB-IVF-C3}
 \end{figure}
 
-Furthermore, we compute $IVF_{sa1}$ of reorder buffer and register file for different program phases. All program phases are chose by Simpoint \cite{sherwood2002automatically} and each contains 1 million instructions. Fig. \ref{fig:ROB-IVF-sa1} and Fig. \ref{fig:RF-IVF-sa1} show $IVF_{sa1}$ of reorder buffer and register file during executing several benchmarks. As can be seen, IVF varies significantly across different program phases and is heavily depended on the characteristics of a program. This phenomenon can be exploited to select proper protection techniques during program execution. We can use heavier protection (strict redundant multithreading) during highly vulnerable phases and lighter protection (partial or no redundant multithreading) during less vulnerable phases. With the dynamic tuning of protection, designers can achieve system reliability while minimize performance and/or energy overhead. The dynamic tuning of protection scheme also has been exploited to protect microprocessors from soft errors \cite{walcott2007dynamic}.
+Furthermore, we compute $IVF_{sa1}$ of reorder buffer and register file for different program phases. All program phases are chose by Simpoint \cite{sherwood2002automatically} and each contains 1 million instructions. Figure \ref{fig:ROB-IVF-sa1} and Figure \ref{fig:RF-IVF-sa1} show $IVF_{sa1}$ of reorder buffer and register file during executing several benchmarks. As can be seen, IVF varies significantly across different program phases and is heavily depended on the characteristics of a program. This phenomenon can be exploited to select proper protection techniques during program execution. We can use heavier protection (strict redundant multithreading) during highly vulnerable phases and lighter protection (partial or no redundant multithreading) during less vulnerable phases. With the dynamic tuning of protection, designers can achieve system reliability while minimize performance and/or energy overhead. The dynamic tuning of protection scheme also has been exploited to protect microprocessors from soft errors \cite{walcott2007dynamic}.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig18}\\
+    \includegraphics[width=0.6\textwidth]{IVF-fig18}\\
     \caption{$IVF_{sa1}$ of reorder buffer for different program phases during executing twolf, vortex, and eon.}
     \label{fig:ROB-IVF-sa1}
 \end{figure}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{IVF-fig19}\\
+    \includegraphics[width=0.6\textwidth]{IVF-fig19}\\
     \caption{$IVF_{sa1}$ of register file for different program phases during executing mcf, crafty, and parser.}
     \label{fig:RF-IVF-sa1}
 \end{figure}
@@ -340,7 +348,7 @@ Furthermore, we compute $IVF_{sa1}$ of reorder buffer and register file for diff
 \subsubsection{IVF Guided Reliable Design}
 Our experimental results show that IVFs of reorder buffer and register file varies significantly, implying that these structures have different vulnerability to intermittent faults. Designers can exploit IVF information to determine which parts in microprocessors are most cost-effective to protect. For those structures with high IVFs, some heavyweight protection techniques are needed. We further introduce several possible techniques to improve system reliability.
 
-For intermittent stuck-at faults or intermittent open and short faults, a feasible protection scheme is to harden these high IVF structures with fault detection techniques (such as ECC or parity code). As intermittent faults occur in burst at the same location, if a fault in a storage cell has been detected for a predefined times, we can deduce that an intermittent fault has happened. At that time, a flag bit in the entry will be set to busy, and the entry will be unused for a while to avoid the influence of the intermittent fault. After then, the entry can be used again when the intermittent fault disappears, for example, when the power delivery sub-system returns to its steady-state voltage. The partial protection technique ParShield proposed in \cite{montesinos2007using} also can be used to protect register file from intermittent faults. Meanwhile, for intermittent timing faults, a prior proposed technique Razor \cite{Dan_Micro03} can be combined to these storage cells in critical paths of the most vulnerable structures, for example, Razor can be used to protect architecture registers as they are more vulnerable to intermittent timing faults. Besides, we can exploit architecture level masking of intermittent timing faults to improve system reliability \cite{pan2011cost}.
+For intermittent stuck-at faults or intermittent open and short faults, a feasible protection scheme is to harden these high IVF structures with fault detection techniques (such as ECC or parity code). As intermittent faults occur in burst at the same location, if a fault in a storage cell has been detected for a predefined times, we can deduce that an intermittent fault has happened. At that time, a flag bit in the entry will be set to busy, and the entry will be unused for a while to avoid the influence of the intermittent fault. After then, the entry can be used again when the intermittent fault disappears, for example, when the power delivery sub-system returns to its steady-state voltage. The partial protection technique ParShield proposed in \cite{Using_Register_Lifetime_dsn07} also can be used to protect register file from intermittent faults. Meanwhile, for intermittent timing faults, a prior proposed technique Razor \cite{Dan_Micro03} can be combined to these storage cells in critical paths of the most vulnerable structures, for example, Razor can be used to protect architecture registers as they are more vulnerable to intermittent timing faults. Besides, we can exploit architecture level masking of intermittent timing faults to improve system reliability \cite{pan2011cost}.
 
 The above introduced techniques seek to tolerate intermittent faults at fine-granularity. A coarse-granularity technique can be used to deal with intermittent faults in nowadays multi-core or many-core microprocessors. With inherent redundancy in these microprocessors, if a core sustains an intermittent fault, it should be suspended for a period of time, or operating system should transfer threads executing in the faulty core to other spare cores. Once the intermittent fault disappears later, the affected core can be used again.
 
@@ -359,12 +367,12 @@ Intermittent faults are emerging as a big challenge to reliable microprocessor d
 With the IVF evaluation methodology, we compute IVFs for reorder buffer and register file in terms of intermittent stuck-at faults, intermittent open and short faults, and intermittent timing faults. Experimental results show that intermittent stuck-at-1 faults have most serious adverse impact on program execution among these three types of intermittent faults. Besides, IVF varies noticeably across different microprocessor structures and program phases. Our experimental results imply partial protection of the most vulnerable structures and program phases to enhance system reliability. With the guide of IVF evaluation methodology, we also discuss several possible intermittent fault detection and recovery techniques which can be used to improve system reliability.
 
 \section{Multi-Core Processor Salvaging}
-According to recent ITRS report, reliability issue due to progressive aging mechanism has notched one of the top five near-term (by 2020) challenges  \cite{itrs13}. These aging mechanisms, such as TDDB (Time-Dependent Dielectric Breakdown), NBTI (Negative Bias Temperature Instability), PBTI (Positive Bias Temperature Instability), HCI (Hot-Carrier Injection), RTN (Random Telegraph Noise),  can cause processor degradations, and are blamed for "Sick Silicon". The circuit-level impact can be measured by aging sensors \cite{siliconodometer} \cite{svfdtvlsi}.
+According to recent ITRS report, reliability issue due to progressive aging mechanism has notched one of the top five near-term (by 2020) challenges  \cite{itrs13}. These aging mechanisms, such as TDDB (Time-Dependent Dielectric Breakdown), NBTI (Negative Bias Temperature Instability), PBTI (Positive Bias Temperature Instability), HCI (hot carrier injection), RTN (Random Telegraph Noise),  can cause processor degradations, and are blamed for "Sick Silicon". The circuit-level impact can be measured by aging sensors \cite{siliconodometer} \cite{yan2010svfd}.
 
 There are two types of core salvaging approaches which inevitably result in core-to-core heterogeneity:
 \begin{itemize}
     \item Decoupling the faulty components \cite{salvaging}. As shown in Figure \ref{manycore}, for example, the Core A and Core B suffered from pipeline defect and L1 I-cache defect, respectively; the defect-affected partitions, marked as dark parts,  are decoupled from the rest to make each core functionally right, but in a degraded manner.
-    \item Adaptive voltage-frequency setting \cite{adaptive-core} and timing recycling \cite{ReviveNet}\cite{Recycle_07}. For example, the cores initially have the same max frequency, $Fmax$, but with the in-field dynamic variations such as aging effects, the $Fmax$ of the cores can differ from each other, as the $Fmax$ distribution indicated with the color bar.
+    \item Adaptive voltage-frequency setting \cite{tschanz201045nm} and timing recycling \cite{ReviveNet}\cite{Recycle_07}. For example, the cores initially have the same max frequency, $Fmax$, but with the in-field dynamic variations such as aging effects, the $Fmax$ of the cores can differ from each other, as the $Fmax$ distribution indicated with the color bar.
 \end{itemize}
 
 The impact of $Fmax$ is relatively simple because the performance is always positively correlated with it; however, the impact  from decoupling of faulty components is much more subtle. Take the Core A and Core B for example, clearly, we cannot conclude whether Core A  outperforms Core B, or not. So, we will focus on the defect-decoupling style of core salvaging in this paper.
@@ -373,14 +381,15 @@ The degradation models used in experiments are listed in Table \ref{degrademodel
 
 \begin{table}[t!]
     \caption{Degradation models}\label{degrademodel}
+    \setlength{\tabcolsep}{3mm}
     \centering
         \vspace{0.2cm}
         \scalebox{1}[1]{
-        \begin{tabular}{|c|l|c|}
+        \begin{tabular}{@{}c|l|c}
         \hline
-        \multicolumn{2}{|l|}  {\textbf{Degradation component}} &  \textbf{Decoupled Capacity} \\
+        \multicolumn{2}{l|}  {\textbf{Degradation component}} &  \textbf{Decoupled Capacity} \\
         \hline
-        \hline
+       
         \multirow{2}{1.5cm} {Front end}  &Branch predictor & 1/4 : 1/2 : 3/4 \\
         & Inst. window       &       1/4 :  1/2 : 3/4 \\
         \hline
@@ -398,7 +407,7 @@ The degradation models used in experiments are listed in Table \ref{degrademodel
 
 \begin{figure}[t]
       \centering
-      \includegraphics[width=0.7\textwidth]{dist4_.eps}\\
+      \includegraphics[width=0.6\textwidth]{dist4}\\
       \caption{Performance distribution}\label{perfdist}
 \end{figure}
 
@@ -412,8 +421,8 @@ Many previous researches have study variation-aware optimization problems \cite{
 
 \begin{figure*}[t]
     \centering
-    \subfigure{\includegraphics[width=0.45\textwidth]{SnippetDistributionlatest.eps}}
-    \subfigure{\includegraphics[width=0.45\textwidth]{NewSnippetDeviationTolerance.eps}}
+    \subfigure{\includegraphics[width=0.45\textwidth]{SnippetDistributionlatest}}
+    \subfigure{\includegraphics[width=0.45\textwidth]{NewSnippetDeviationTolerance}}
     \caption{Exemplifying the variation of six snippet classes (L) and the CDF of $10^3$ snippet classes (R)}
     \label{sdist}
 \end{figure*}
@@ -438,15 +447,15 @@ where, $P(c_i|s_m)$ behaves like a random variable, but we find the randomness c
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.7\textwidth]{granularity.eps}\\
+  \includegraphics[width=0.7\textwidth]{granularity}\\
   \caption{Temporal granularities of Snippet, Epoch, and Workload}\label{granu}
 \end{figure}
 
 
 \begin{figure*}[t]
 \centering
-\subfigure{\includegraphics[width=0.45\textwidth]{InstructionActivities.eps}}
-\subfigure{\includegraphics[width=0.45\textwidth]{SnippetSizeDistribution.eps}}
+\subfigure{\includegraphics[width=0.45\textwidth]{InstructionActivities}}
+\subfigure{\includegraphics[width=0.45\textwidth]{SnippetSizeDistribution}}
 \caption{The uops frequency distribution (L)  and snippet occurrence  distribution (R)}
 \label{hotdist}
 \end{figure*}
@@ -473,10 +482,10 @@ The definition of snippet holds two merits: 1) the popularity of different snipp
     \item \textbf{Tolerance}: In reality, we may relax the classification requirement by allowing a tolerance $\eta$ in frequency variations.  For example, $\eta=10\%$ means that the frequency of the same active uops with $\pm5\%$ variation can be viewed as equivalent.
 \end{itemize}
 
-\subsubsection{Snippet characterization}
+takanami2012built\subsubsection{Snippet characterization}
 In this section, we study the snippets performance distributions, population distribution, and the impacts of snippet volume and tolerance. 
 
-\textbf{Snippet performance distribution is narrowly distributed.} Snippet classes can serve as ideal reagents to testify the healthy condition of cores because they are narrowly distributed, or called ``stable" in performance, no matter which application these snippets come from. As an example, we demonstrate the performance distribution of six snippet classes in Figure \ref{sdist}(L). The performance (measured by IPC) with volume of 10 million uops and tolerance of 6\%.   With such narrowly distribution, the mean value ($\mu$) of  $S$  on core $i$ can serve as a reasonable approximation to $P(c_i|S_m)$.
+\textbf{Snippet performance distribution is narrowly distributed.} Snippet classes can serve as ideal reagents to testify the healthy condition of cores because they are narrowly distributed, or called ``stable" in performance, no matter which application these snippets come from. As an example, we demonstrate the performance distribution of six snippet classes in Figure \ref{sdist}(L). The performance (measured by instructions per cycle, IPC) with volume of 10 million uops and tolerance of 6\%.   With such narrowly distribution, the mean value ($\mu$) of  $S$  on core $i$ can serve as a reasonable approximation to $P(c_i|S_m)$.
 
 In fact, this merit of performance stability  is not a coincidence but  holds for majority of the snippet classes.  The stability can be reflected by the ratio of performance standard deviation and mean ($\sigma/\mu$).  The smaller  $\sigma/\mu$ implies higher performance stability.  We demonstrate stability of snippet classes with SPECCPU2006 and PARSEC benchmarks, which represent the multi-program and multi-thread workload, respectively. The result in Figure \ref{sdist}(R) shows that the $\sigma/\mu$ is no more than 5\% for more than 90\% snippet classes, when $\eta=6\%$.
 
@@ -493,7 +502,7 @@ Second, the "hot" snippet classes also are small part of the whole space. As Fig
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.65\textwidth]{NewSnippetDeviationToleranceVariation.eps}\\
+  \includegraphics[width=0.65\textwidth]{NewSnippetDeviationToleranceVariation}\\
   \caption{The impact of tolerance to stability}\label{tolerance}
 \end{figure}
 
@@ -508,7 +517,7 @@ Clearly, different snippet classes may stress different core microarchitectural 
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.7\textwidth]{NewSnippetFaultDeviationLatest.eps}\\
+  \includegraphics[width=0.7\textwidth]{NewSnippetFaultDeviationLatest}\\
   \caption{Snippet-specific healthy condition}\label{faultaware}
 \end{figure}
 
@@ -540,7 +549,7 @@ As a key intelligence of CoreRank, $\mathcal{H}$ is not static but dynamically r
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.75\textwidth]{IPCPredictionAndCoverage.eps}\\
+  \includegraphics[width=0.75\textwidth]{IPCPredictionAndCoverage}\\
   \caption{Validation of CoreRank in performance prediction accuracy (U) on a salvaged core with half L2 cache disabled, and corresponding workload coverage (L) by valid snippet classes.}\label{prederror}
 \end{figure}
 
@@ -565,7 +574,7 @@ Even though this paper focuses on the core progressive degradation, i.e. the cor
 \begin{figure*}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.95\textwidth]{imple2.eps}\\
+  \includegraphics[width=0.95\textwidth]{imple2}\\
   \caption{CoreRank implementation}\label{flow}
 \end{figure*}
 
@@ -577,7 +586,7 @@ In this paper we propose a hardware-implemented version which provides the OS co
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.6\textwidth]{mux1.eps}\\
+  \includegraphics[width=0.6\textwidth]{mux1}\\
   \caption{Time Division Multiplexer (TDM) style CoreRank to reduce the hardware overhead}\label{mux}
 \end{figure}
 
@@ -593,7 +602,7 @@ There are two key hardware components in the implementation: a Bloom filter and 
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.65\textwidth]{bloomfilter2.eps}\\
+  \includegraphics[width=0.65\textwidth]{bloomfilter2}\\
 
   \caption{Bloom filter in snippet classification}\label{bfilter}
 
@@ -611,7 +620,7 @@ The snippet classes are managed with a hash table, as Figure \ref{hashtable} exe
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.65\textwidth]{evalu_bf.eps}\\
+  \includegraphics[width=0.65\textwidth]{evalu_bf}\\
   \caption{Bloom filter design space}\label{evalubf}
 
 \end{figure}
@@ -619,7 +628,7 @@ The snippet classes are managed with a hash table, as Figure \ref{hashtable} exe
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.75\textwidth]{hashtable2.eps}\\
+  \includegraphics[width=0.75\textwidth]{hashtable2}\\
   \caption{Hash table}\label{hashtable}
 \end{figure}
 
@@ -633,7 +642,7 @@ Therefore, we use direct map approach to achieve the effect of perfect hash. The
 \begin{figure}[t]
   % Requires \usepackage{graphicx}
   \centering
-  \includegraphics[width=0.6\textwidth]{Result_Hash.eps}\\
+  \includegraphics[width=0.6\textwidth]{Result_Hash}\\
   \caption{Collision rate of different hash functions}\label{hashresult}
 \end{figure}
 
@@ -646,27 +655,21 @@ The main hardware overhead comes from the bloom filters and MD5 hash function. F
 
 \begin{table}[t!]
 \caption{CoreRank hardware overhead}\label{overhead}
+\setlength{\tabcolsep}{4mm}
 \begin{center}\small
 \vspace{0.2cm}
 \scalebox{1}[1]{
-\begin{tabular}{|l|c|c|}
-\hline
- \textbf{Component}   &   \textbf{Comb. logic gates (K)} &\textbf{Storage(KB)}\\
-\hline
-\hline
+\begin{tabular}{@{}lcc}
+\toprule
+ \textbf{Component}   &  \ \textbf{Comb. logic gates (K)} \  & \ \textbf{Storage(KB)} \ \\
+\midrule
 MD5                     &76      &       0.1       \\
-\hline
  Bloom filter    &  1582   &   12.6       \\
-\hline
 Pearson Hash  & 0.62 & 0.6  \\
-\hline
 Bucket                &   0.38 & 7.3    \\
-\hline
 Others                 &   61.2   & 0.2 \\
-\hline
 Total                   &1720  &   20.8   \\
-
-\hline
+\bottomrule
 \end{tabular}}
 
 \end{center}
@@ -675,38 +678,33 @@ Total                   &1720  &   20.8   \\
 \begin{figure*}[t]
 
  \centering
-  \includegraphics[width=0.8\textwidth]{MediumDegradationWithAndWithoutCoreRank41.eps}\\
+  \includegraphics[width=0.8\textwidth]{MediumDegradationWithAndWithoutCoreRank41}\\
 \caption{Performance comparison between processors without (L) and with CoreRank (R)}
 \label{comp1}
 \end{figure*}
 
 \subsection{Experiment Result Analysis} \label{sec:3}
 \subsubsection{Experimental Setup}
-We evaluate CoreRank scheme with Sniper \cite{sniper}, a multi-core simulator based on the interval core model\cite{IntervalSimulation} and Graphite\cite{Graphite} simulation infrastructure. Sniper can accurately simulate x86 architecture at a speed of serval MIPS (million instructions per second). Sniper uses Intel Pin tool (version 61147) to dynamically profile the stream of uops of each cores, which provides us a easy way to collect snippets in the experiments.   We use a 12x12 manycore as the baseline to evaluate the performance.
+We evaluate CoreRank scheme with Sniper \cite{sniper}, a multi-core simulator based on the interval core model\cite{IntervalSimulation} and Graphite\cite{Graphite} simulation infrastructure. Sniper can accurately simulate x86 architecture at a speed of serval MIPS. Sniper uses Intel Pin tool (version 61147) to dynamically profile the stream of uops of each cores, which provides us a easy way to collect snippets in the experiments.   We use a 12x12 manycore as the baseline to evaluate the performance.
 
 We run through SPECCPU2006 and PARSEC benchmark suits, which generates over ten thousands of snippets under different core degradation models. We assume each core, if has defect,  only suffers from a single type of defects to make the time-consuming experiment affordable.   We configure the core  according to Intel Nehalem microarchitecture which has 1125 types of uops.  Table \ref{Exp} shows the basic core configuration.   In terms of snippet, otherwise specified, the snippet volume is 10M, the capacity of each snippet class is 200, with tolerance of 6\%.
 
 
 \begin{table}
+  \setlength{\tabcolsep}{6mm}
 \caption{Core configuration}\label{Exp}
 \begin{center}\small
-    \begin{tabular}{|l|c|}
-  \hline
+    \begin{tabular}{@{}lc}
+  \toprule
   \textbf{Parameter} &\textbf{ Value} \\
-  \hline
-  \hline
+\midrule
   Frequency & 1GHz \\
-  \hline
   L1 I/D cache 32KB &  Cache line 64B, associativity 4 \\
- \hline
   L2 cache  512KB &  Cache line 64B, associativity 8 \\
-  \hline
   Issue Width &  4 \\
-  \hline
   Branch predict entry  &  1024\\
-  \hline
   Instruction Window &  96 \\
-  \hline
+\bottomrule
   \end{tabular}
   
   \end{center}
@@ -721,14 +719,14 @@ We  build two types of workloads: SPEC CPU2006 for multi-program workloads, and 
 \subsubsection{Result Analysis}
 \begin{figure*}[t]
  \centering
-  \includegraphics[width=1\textwidth]{Figure14DegradationLevelwithoutCoreRank41.eps}\\
+  \includegraphics[width=1\textwidth]{Figure14DegradationLevelwithoutCoreRank41}\\
 \caption{Performance degradation on processors with mild(L), median(M), and severe(R) degradation models,  without CoreRank,  4-thread for multi-thread workloads.}
 \label{comp2}
 \end{figure*}
 
 \begin{figure*}[t]
  \centering
-  \includegraphics[width=1\textwidth]{Figure15DegradationLevelwithCoreRank31.eps}\\
+  \includegraphics[width=1\textwidth]{Figure15DegradationLevelwithCoreRank31}\\
 \caption{Performance degradation on processors with mild(L), median(M), and severe(R) degradation models,  with CoreRank,  4-thread for multi-thread workloads.}
 \label{comp3}
 \end{figure*}
@@ -745,7 +743,7 @@ The situation can be alleviated greatly with CoreRank, as Figure \ref{comp1}(R) 
 
 \begin{figure*}[t]
  \centering
-  \includegraphics[width=0.8\textwidth]{Defect-awareCoreRank.eps}\\
+  \includegraphics[width=0.8\textwidth]{Defect-awareCoreRank}\\
 \caption{Performance comparison between conventional Defect-aware scheme (L) and  CoreRank (R)}
 \label{compdefectaware}
 \end{figure*}
@@ -774,7 +772,7 @@ Figure \ref{compheteroaware} shows the comparison between TDS and CoreRank, on m
 
 \begin{figure}[t]
  \centering
-  \includegraphics[width=0.75\textwidth]{fastCoreAndCoreRankComparision.eps}\\
+  \includegraphics[width=0.75\textwidth]{fastCoreAndCoreRankComparision}\\
 \caption{Performance comparison between Throughput-Driven Scheduling (TDS) (L) and  CoreRank (R)}
 \label{compheteroaware}
 \end{figure}
