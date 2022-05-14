@@ -1,5 +1,5 @@
 TITLE=book
-TEXORIG=book.tex acknowledgement.tex chapter2.tex chapter4.tex chapter6.tex foreword.tex part.tex acronym.tex chapter1.tex chapter3.tex chapter5.tex dedication.tex glossary.tex preface.tex 
+TEXORIG=book.tex chapter2.tex chapter4.tex chapter6.tex foreword.tex part.tex acronym.tex chapter1.tex chapter3.tex chapter5.tex dedication.tex glossary.tex preface.tex 
 
 BIBFILES=refs.bib 
 IMGFILES=
